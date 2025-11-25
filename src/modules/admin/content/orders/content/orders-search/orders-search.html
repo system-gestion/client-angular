@@ -1,0 +1,215 @@
+<div class="flex-1 bg-gray-50 py-6 flex items-center justify-center">
+  <div class="max-w-6xl mx-auto w-full">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-gray-800">Buscar Pedidos</h1>
+      <p class="text-sm text-gray-600 mt-1">Encuentra pedidos usando diferentes filtros</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Main Column -->
+      <div class="lg:col-span-3">
+        <!-- Search Card -->
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6 overflow-hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Código Cliente -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Código Cliente</label>
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <i class="fa-solid fa-user"></i>
+                </span>
+                <input
+                  type="text"
+                  [(ngModel)]="cod_cliente"
+                  class="w-full pl-10 pr-12 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
+                  placeholder="Ej: CLI001"
+                />
+              </div>
+            </div>
+
+            <!-- Fecha Inicio -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Inicio</label>
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                <input
+                  type="date"
+                  [(ngModel)]="fecha_inicio"
+                  class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <!-- Fecha Fin -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Fecha Fin</label>
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <i class="fa-solid fa-calendar-days"></i>
+                </span>
+                <input
+                  type="date"
+                  [(ngModel)]="fecha_fin"
+                  class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm"
+                />
+              </div>
+            </div>
+
+            <!-- Importe Mínimo -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Importe Mínimo</label>
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <span class="text-xs">S/.</span>
+                </span>
+                <input
+                  type="number"
+                  [(ngModel)]="importe_min"
+                  class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
+
+            <!-- Importe Máximo -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Importe Máximo</label>
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <span class="text-xs">S/.</span>
+                </span>
+                <input
+                  type="number"
+                  [(ngModel)]="importe_max"
+                  class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
+
+            <!-- Buttons: place inside the grid so they occupy the empty cell on lg screens -->
+            <div
+              class="flex gap-3 items-end mt-4 md:mt-0 md:col-span-2 lg:col-span-1 lg:justify-end"
+            >
+              <button
+                (click)="buscar()"
+                [disabled]="loading()"
+                class="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 disabled:bg-gray-400 transition-colors font-medium shadow-md"
+              >
+                @if (loading()) {
+                <span class="flex items-center gap-2">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Buscando...
+                </span>
+                } @else { Buscar }
+              </button>
+              <button
+                (click)="limpiar()"
+                class="px-6 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors font-medium"
+              >
+                Limpiar
+              </button>
+            </div>
+          </div>
+          <!-- end grid -->
+
+          <!-- Error Message -->
+          @if (error()) {
+          <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+            <p class="text-red-700">{{ error() }}</p>
+          </div>
+          }
+
+          <!-- Results -->
+          <div class="mt-6">
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+              <h3 class="text-lg font-semibold text-gray-800">
+                Resultados ({{ pedidos().length }})
+              </h3>
+            </div>
+
+            <div class="overflow-x-auto w-full">
+              <table class="w-full table-auto">
+                <!-- full width table -->
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Número
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Cliente
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Fecha
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Importe
+                    </th>
+                    <th
+                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Detalles
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                  @if (pedidos().length > 0) { @for (pedido of pedidos(); track pedido.num_pedido) {
+                  <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {{ pedido.num_pedido }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <div>{{ pedido.cod_cliente }}</div>
+                      @if (pedido.nombre_cliente) {
+                      <div class="text-xs text-gray-500">{{ pedido.nombre_cliente }}</div>
+                      }
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {{ pedido.fecha }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
+                      S/. {{ pedido.importe.toFixed(2) }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      {{ pedido.detalles.length }} artículos
+                    </td>
+                  </tr>
+                  } } @else {
+                  <tr>
+                    <td class="px-6 py-8 text-center text-sm text-gray-500" colspan="5">
+                      No se encontraron pedidos.
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Panel removed as requested -->
+    </div>
+  </div>
+</div>

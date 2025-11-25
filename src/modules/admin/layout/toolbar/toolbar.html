@@ -1,0 +1,63 @@
+<nav class="bg-linear-to-r from-blue-700 via-blue-600 to-blue-700 shadow-lg">
+  <div class="max-w-7xl mx-auto px-4">
+    <!-- Toolbar principal -->
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo o título -->
+      <div class="shrink-0">
+        <h1 class="text-white text-xl font-bold">Sistema de Gestión</h1>
+      </div>
+
+      <!-- Menú principal -->
+      @if (isAuthenticated()) {
+        <div class="flex items-center space-x-1">
+          @for (menuItem of visibleMenuItems(); track menuItem.label) {
+            <div class="relative">
+              <!-- Botón de menú -->
+              <button
+                (click)="menuItem.action ? menuItem.action() : toggleMenu(menuItem.label)"
+                class="px-4 py-2 text-white font-semibold text-sm uppercase tracking-wide hover:bg-blue-800 rounded-t-lg transition-all duration-200 border-2 border-transparent hover:border-blue-300"
+                [class.bg-blue-800]="expandedMenu() === menuItem.label"
+                [class.border-blue-300]="expandedMenu() === menuItem.label">
+                {{ menuItem.label }}
+              </button>
+
+              <!-- Submenú desplegable -->
+              @if (menuItem.items && expandedMenu() === menuItem.label) {
+                <div class="absolute top-full left-0 mt-0 w-56 bg-white border-2 border-blue-300 rounded-b-lg shadow-2xl z-50 overflow-hidden">
+                  @for (subItem of menuItem.items; track subItem.label) {
+                    @if (canAccessSubMenuItem(subItem)) {
+                      <button
+                        (click)="subItem.action()"
+                        class="w-full text-left px-4 py-3 text-gray-800 hover:bg-blue-50 hover:text-blue-700 font-medium text-sm border-b border-gray-200 last:border-b-0 transition-colors duration-150">
+                        {{ subItem.label }}
+                      </button>
+                    }
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Info de usuario -->
+        <div class="flex items-center space-x-3">
+          <div class="text-right">
+            <p class="text-white text-sm font-medium">{{ user()?.nombres }}</p>
+            <p class="text-blue-200 text-xs">{{ user()?.correo }}</p>
+          </div>
+          <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold border-2 border-white">
+            {{ user()?.nombres?.charAt(0)?.toUpperCase() }}
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</nav>
+
+<!-- Overlay para cerrar menús al hacer clic fuera -->
+@if (expandedMenu()) {
+  <div
+    class="fixed inset-0 z-40"
+    (click)="expandedMenu.set(null)">
+  </div>
+}
