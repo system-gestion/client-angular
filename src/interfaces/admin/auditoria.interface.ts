@@ -4,8 +4,10 @@ export interface DetalleSesionResponse {
   cod_usuario: number;
   tabla: string;
   accion: number;
+  hora?: string;
   nombre_usuario?: string;
   accion_text?: string;
+  datos_json?: string;
 }
 
 export interface SesionLogResponse {
@@ -17,6 +19,17 @@ export interface SesionLogResponse {
   nombre_usuario?: string;
   correo_usuario?: string;
   detalles: DetalleSesionResponse[];
+}
+
+export interface SesionLogList {
+  num_sesion: number;
+  cod_usuario?: number;
+  fecha_inicio: string;
+  fecha_fin?: string;
+  estado: number;
+  nombre_usuario?: string;
+  correo_usuario?: string;
+  total_acciones: number;
 }
 
 export interface ActividadUsuario {

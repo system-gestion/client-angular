@@ -5,11 +5,12 @@ import { API_URL } from '@route/api.route';
 import {
   DetalleSesionResponse,
   SesionLogResponse,
-  ActividadUsuario
+  SesionLogList,
+  ActividadUsuario,
 } from '@interface/admin/auditoria.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuditoriaService {
   private http = inject(HttpClient);
@@ -20,8 +21,8 @@ export class AuditoriaService {
     estado?: number;
     skip?: number;
     limit?: number;
-  }): Observable<SesionLogResponse[]> {
-    return this.http.get<SesionLogResponse[]>(API_URL.auditoria.sesiones(params));
+  }): Observable<SesionLogList[]> {
+    return this.http.get<SesionLogList[]>(API_URL.auditoria.sesiones(params));
   }
 
   getSesion(num_sesion: number): Observable<SesionLogResponse> {
@@ -44,5 +45,12 @@ export class AuditoriaService {
 
   getResumen(): Observable<ActividadUsuario[]> {
     return this.http.get<ActividadUsuario[]>(API_URL.auditoria.resumen);
+  }
+
+  rollbackAction(num_detalle: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${API_URL.auditoria.base}/rollback/${num_detalle}`,
+      {}
+    );
   }
 }

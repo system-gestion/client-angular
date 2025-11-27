@@ -88,7 +88,7 @@ export const PATH = {
     audit: {
       _path: 'audit',
       sessions: { _path: 'sessions' },
-      actions: { _path: 'actions' },
+      rollback: { _path: 'rollback' },
     },
 
     offers: {
@@ -147,7 +147,7 @@ export const ROUTE_CONFIG = {
     // Audit - Solo supervisores
     [buildPath(PATH.admin.audit)]: [1],
     [buildPath(PATH.admin.audit.sessions)]: [1],
-    [buildPath(PATH.admin.audit.actions)]: [1],
+    [buildPath(PATH.admin.audit.rollback)]: [1],
 
     // Offers - Vendedores y clientes
     [buildPath(PATH.admin.offers)]: [2, 3],

@@ -87,7 +87,7 @@ export class Toolbar {
       path: buildPath(PATH.admin.audit),
       items: [
         { label: 'INICIOS DE SESION', path: buildPath(PATH.admin.audit.sessions), action: () => this.navigate(buildPath(PATH.admin.audit.sessions)) },
-        { label: 'ACTIVIDAD DE USUARIOS', path: buildPath(PATH.admin.audit.actions), action: () => this.navigate(buildPath(PATH.admin.audit.actions)) }
+        { label: 'ROLLBACK DE USUARIOS', path: buildPath(PATH.admin.audit.rollback), action: () => this.navigate(buildPath(PATH.admin.audit.rollback)) }
       ]
     },
     {

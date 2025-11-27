@@ -89,6 +89,10 @@ export class AuthService {
     }
   }
 
+  getToken(): string | null {
+    return this.tokenSignal();
+  }
+
   private saveToStorage(response: LoginResponse): void {
     if (typeof window !== 'undefined') {
       localStorage.setItem('access_token', response.access_token);
@@ -110,6 +114,8 @@ export class AuthService {
   }
 
   restoreSession(): void {
+    if (typeof window === 'undefined') return;
+
     const token = localStorage.getItem('access_token');
     const userStr = localStorage.getItem('user');
     const numSesionStr = localStorage.getItem('num_sesion');

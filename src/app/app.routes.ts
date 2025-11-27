@@ -61,7 +61,7 @@ export const routes: Routes = [
       { path: getPath(PATH.admin.audit), loadComponent: () => import('@module/admin/content/audit/audit').then(m => m.Audit),
         children: [
           { path: getPath(PATH.admin.audit.sessions), loadComponent: () => import('@module/admin/content/audit/content/audit-sessions/audit-sessions').then(m => m.AuditSessions) },
-          { path: getPath(PATH.admin.audit.actions), loadComponent: () => import('@module/admin/content/audit/content/audit-actions/audit-actions').then(m => m.AuditActions) },
+          { path: getPath(PATH.admin.audit.rollback), loadComponent: () => import('@module/admin/content/audit/content/audit-rollback/audit-rollback').then(m => m.AuditRollback) },
           { path: '**', redirectTo: getPath(PATH.admin.audit.sessions), pathMatch: 'full'}
         ]
       },

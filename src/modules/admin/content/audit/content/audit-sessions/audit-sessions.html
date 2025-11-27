@@ -127,7 +127,7 @@
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white">
               @if (loading()) {
               <tr>
                 <td colspan="6" class="px-6 py-8 text-center text-gray-500">
@@ -144,8 +144,13 @@
                 </td>
               </tr>
               } @else { @for (sesion of sesiones(); track sesion.num_sesion) {
-              <tr class="hover:bg-gray-50 transition-colors">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+              <tr
+                class="hover:bg-blue-50 transition-colors cursor-pointer group"
+                (click)="verDetalles(sesion.num_sesion)"
+              >
+                <td
+                  class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 group-hover:text-blue-600"
+                >
                   #{{ sesion.num_sesion }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
@@ -169,7 +174,11 @@
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
-                  {{ sesion.detalles.length }} acciones
+                  <span
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                  >
+                    {{ sesion.total_acciones }} acciones
+                  </span>
                 </td>
               </tr>
               } }
@@ -180,3 +189,12 @@
     </div>
   </div>
 </div>
+
+<!-- Modal Detalles -->
+@if (showModal()) {
+<app-sessions-details
+  [session]="selectedSesion()"
+  [loading]="loadingDetails()"
+  (close)="closeModal()"
+></app-sessions-details>
+}

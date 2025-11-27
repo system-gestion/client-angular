@@ -17,6 +17,7 @@
       "@core/*": ["core/*"],
       "@guard/*": ["guards/*"],
       "@route/*": ["routes/*"],
+      "@interceptor/*": ["interceptors/*"],
       "@environment/*": ["environments/*"]
     }
   },

@@ -1,0 +1,144 @@
+<div
+  class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center animate-fade-in"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 animate-scale-in flex flex-col max-h-[90vh]"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="p-6 border-b border-gray-200 shrink-0">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+            <i class="fa-solid fa-clipboard-list text-2xl text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">
+              Detalles de Sesión #{{ session?.num_sesion }}
+            </h3>
+            <p class="text-sm text-gray-600">Información detallada y registro de actividades</p>
+          </div>
+        </div>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content (Scrollable) -->
+    <div class="p-6 overflow-y-auto">
+      @if (loading) {
+      <div class="flex justify-center items-center py-12">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+      } @else if (session) {
+      <!-- Info Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Usuario</p>
+          <p class="text-sm font-semibold text-gray-900 mb-1">{{ session.nombre_usuario }}</p>
+          <p class="text-xs text-gray-500">{{ session.correo_usuario }}</p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Fecha</p>
+          <p class="text-sm font-semibold text-gray-900 mb-1">
+            {{ session.fecha_inicio | date : 'dd/MM/yyyy' }}
+          </p>
+          <p class="text-xs text-gray-500">
+            {{ session.fecha_fin ? (session.fecha_fin | date : 'dd/MM/yyyy') : 'En curso' }}
+          </p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Estado</p>
+          <span
+            class="px-2.5 py-0.5 inline-flex text-xs font-bold rounded-full"
+            [ngClass]="getEstadoClass(session.estado || 0)"
+          >
+            {{ getEstadoLabel(session.estado || 0) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+              >
+                ID
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+              >
+                Tabla
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+              >
+                Acción
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider"
+              >
+                Hora
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            @for (detalle of session.detalles; track detalle.num_detalle) {
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                #{{ detalle.num_detalle }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                {{ detalle.tabla }}
+              </td>
+              <td class="whitespace-nowrap px-6 py-4 text-sm">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-700': detalle.accion === 0,
+                    'bg-yellow-100 text-yellow-700': detalle.accion === 1,
+                    'bg-green-100 text-green-700': detalle.accion === 2,
+                    'bg-red-100 text-red-700': detalle.accion === 3
+                  }"
+                >
+                  {{ detalle.accion_text }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                {{ formatTime(detalle.hora) }}
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="4" class="px-6 py-8 text-center text-sm text-gray-500">
+                No hay acciones registradas en esta sesión.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div class="p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl shrink-0 flex justify-end">
+      <button
+        type="button"
+        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-all"
+        (click)="closeModal()"
+      >
+        Cerrar
+      </button>
+    </div>
+  </div>
+</div>

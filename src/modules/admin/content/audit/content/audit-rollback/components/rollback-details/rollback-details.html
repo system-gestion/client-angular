@@ -1,0 +1,101 @@
+<div
+  class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center animate-fade-in"
+  (click)="closeModal()"
+>
+  <div
+    class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full mx-4 animate-scale-in flex flex-col max-h-[90vh]"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Header -->
+    <div class="p-6 border-b border-gray-200 shrink-0">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+            <i class="fa-solid fa-rotate-left text-2xl text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900">
+              Detalles de Rollback #{{ accion?.num_detalle }}
+            </h3>
+            <p class="text-sm text-gray-600">Revisar información antes de revertir</p>
+          </div>
+        </div>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content (Scrollable) -->
+    <div class="p-6 overflow-y-auto">
+      @if (accion) {
+      <!-- Info Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Usuario</p>
+          <p class="text-sm font-semibold text-gray-900 mb-1">
+            {{ accion.nombre_usuario || 'Desconocido' }}
+          </p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Tabla</p>
+          <p class="text-sm font-semibold text-gray-900 mb-1">{{ accion.tabla }}</p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Registro</p>
+          <p class="text-sm font-semibold text-gray-900 mb-1">{{ getTargetId() }}</p>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Acción</p>
+          <span
+            class="px-2.5 py-0.5 inline-flex text-xs font-bold rounded-full"
+            [ngClass]="getAccionClass(accion.accion)"
+          >
+            {{ getAccionLabel(accion.accion) }}
+          </span>
+        </div>
+        <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <p class="text-xs text-gray-500 uppercase font-bold mb-2">Hora</p>
+          <p class="text-sm font-semibold text-gray-900 mb-1">{{ formatTime(accion.hora) }}</p>
+        </div>
+      </div>
+
+      <!-- JSON Data -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden">
+        <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+          <h4 class="text-sm font-bold text-gray-700">Snapshot de Datos (JSON)</h4>
+        </div>
+        <div class="p-4 bg-gray-900 overflow-x-auto">
+          <pre class="text-xs text-green-400 font-mono">{{
+            getFormattedJson(accion.datos_json)
+          }}</pre>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Footer -->
+    <div
+      class="p-6 border-t border-gray-200 bg-gray-50 rounded-b-2xl shrink-0 flex justify-end gap-3"
+    >
+      <button
+        type="button"
+        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-all"
+        (click)="closeModal()"
+        [disabled]="loading"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm transition-all flex items-center gap-2"
+        (click)="confirmRollback()"
+        [disabled]="loading"
+      >
+        @if (loading) {
+        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+        } Confirmar Rollback
+      </button>
+    </div>
+  </div>
+</div>

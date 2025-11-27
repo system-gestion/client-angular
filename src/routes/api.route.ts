@@ -121,6 +121,7 @@ export const API_URL = {
 
   // Auditoría
   auditoria: {
+    base: `${BASE_URL}/auditoria`,
     sesiones: (params?: {
       fecha_inicio?: string;
       fecha_fin?: string;
