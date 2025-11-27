@@ -1,1 +1,180 @@
-<p>offers-new works!</p>
+<div class="flex-1 bg-gray-50 py-6 flex items-center justify-center">
+  <div class="max-w-6xl mx-auto w-full">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-gray-800">Nueva Oferta</h1>
+      <p class="text-sm text-gray-600 mt-1">Asigna un descuento a un artículo</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Resumen / Acciones -->
+      <div class="lg:col-span-1 lg:order-2">
+        <div class="bg-white rounded-2xl shadow-md p-6 sticky top-6">
+          <h2 class="text-base font-semibold text-gray-800 mb-4">Resumen</h2>
+
+          <div class="space-y-3 mb-6">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Artículo:</span>
+              <span class="font-medium text-gray-900">
+                {{ articuloSeleccionado()?.nombre || 'No seleccionado' }}
+              </span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-600">Descuento:</span>
+              <span class="font-medium text-green-600">
+                @if(tipo_descuento() === 1) { S/. }
+                {{ valor_descuento() }}
+                @if(tipo_descuento() === 2) { % }
+              </span>
+            </div>
+            @if (articuloSeleccionado()) {
+            <div class="flex justify-between text-sm pt-2 border-t border-gray-100">
+              <span class="text-gray-600">Precio Final:</span>
+              <span class="font-bold text-blue-600">
+                @if(tipo_descuento() === 1) { S/.
+                {{ (articuloSeleccionado()!.pvp - valor_descuento()).toFixed(2) }} } @else { S/.
+                {{ (articuloSeleccionado()!.pvp * (1 - valor_descuento() / 100)).toFixed(2) }}
+                }
+              </span>
+            </div>
+            }
+          </div>
+
+          <div class="space-y-3">
+            <button
+              (click)="guardar()"
+              [disabled]="loading() || !cod_articulo()"
+              class="w-full px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors font-medium text-sm"
+            >
+              @if (loading()) {
+              <span class="flex items-center justify-center gap-2">
+                <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                Guardando...
+              </span>
+              } @else { Guardar Oferta }
+            </button>
+            <button
+              (click)="limpiar()"
+              [disabled]="loading()"
+              class="w-full px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 disabled:bg-gray-100 transition-colors font-medium text-sm"
+            >
+              Limpiar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario Principal -->
+      <div class="lg:col-span-2 lg:order-1">
+        <div class="bg-white rounded-2xl shadow-md p-6 space-y-6">
+          <!-- Selección de Artículo -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+              Artículo <span class="text-red-500">*</span>
+            </label>
+
+            @if (!articuloSeleccionado()) {
+            <div class="space-y-3">
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  [(ngModel)]="searchArticulo"
+                  (keyup.enter)="buscarArticulos()"
+                  placeholder="Buscar artículo..."
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm"
+                />
+                <button
+                  (click)="buscarArticulos()"
+                  [disabled]="loadingArticulos()"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 text-sm"
+                >
+                  <i class="fa-solid fa-search"></i>
+                </button>
+              </div>
+
+              @if (articulos().length > 0) {
+              <div class="border border-gray-200 rounded-lg max-h-48 overflow-y-auto">
+                @for (articulo of articulos(); track articulo.cod_articulo) {
+                <div
+                  (click)="seleccionarArticulo(articulo)"
+                  class="p-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                >
+                  <div class="font-medium text-sm text-gray-900">{{ articulo.nombre }}</div>
+                  <div class="text-xs text-gray-500">
+                    PVP: S/. {{ articulo.pvp }} | Stock: {{ articulo.stock }}
+                    @if(articulo.tipo_descuento && articulo.tipo_descuento > 0) {
+                    <span class="text-green-600 font-bold ml-2">(Oferta Activa)</span>
+                    }
+                  </div>
+                </div>
+                }
+              </div>
+              }
+            </div>
+            } @else {
+            <div class="flex items-center gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <div
+                class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold text-sm"
+              >
+                <i class="fa-solid fa-box"></i>
+              </div>
+              <div class="flex-1">
+                <div class="font-medium text-sm text-gray-800">
+                  {{ articuloSeleccionado()!.nombre }}
+                </div>
+                <div class="text-xs text-gray-600">PVP: S/. {{ articuloSeleccionado()!.pvp }}</div>
+              </div>
+              <button
+                (click)="cod_articulo.set(null); articuloSeleccionado.set(null)"
+                class="text-red-600 hover:text-red-700"
+              >
+                <i class="fa-solid fa-times"></i>
+              </button>
+            </div>
+            }
+          </div>
+
+          <!-- Detalles de la Oferta -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                >Tipo de Descuento</label
+              >
+              <div class="relative">
+                <span
+                  class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <i class="fa-solid fa-tag"></i>
+                </span>
+                <select
+                  [(ngModel)]="tipo_descuento"
+                  class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm bg-white appearance-none"
+                >
+                  <option [value]="1">Fijo (S/.)</option>
+                  <option [value]="2">Porcentual (%)</option>
+                </select>
+                <span
+                  class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none"
+                >
+                  <i class="fa-solid fa-chevron-down text-xs"></i>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1.5"
+                >Valor del Descuento</label
+              >
+              <input
+                type="number"
+                [(ngModel)]="valor_descuento"
+                min="0"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none text-sm"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

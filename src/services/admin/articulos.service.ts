@@ -24,10 +24,6 @@ export class ArticulosService {
     return this.http.post<ArticuloResponse>(API_URL.articulos.create, articulo);
   }
 
-  getOfertas(): Observable<OfertaResponse[]> {
-    return this.http.get<OfertaResponse[]>(API_URL.articulos.ofertas);
-  }
-
   search(q: string): Observable<ArticuloResponse[]> {
     return this.http.get<ArticuloResponse[]>(API_URL.articulos.search(q));
   }

@@ -1,1 +1,138 @@
-<p>users-profile works!</p>
+<div class="flex-1 bg-gray-50 py-6 flex flex-col items-center">
+  <div class="max-w-6xl w-full px-4">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-gray-800">Perfil de Usuario</h1>
+      <p class="text-sm text-gray-600 mt-1">Busca un usuario para ver su información detallada</p>
+    </div>
+
+    <!-- Search Section -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-8">
+      <div class="flex flex-col md:flex-row gap-4 items-end">
+        <div class="flex-1 w-full">
+          <label class="block text-sm font-medium text-gray-700 mb-2">Código de Usuario</label>
+          <div class="relative">
+            <span
+              class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
+            >
+              <i class="fa-solid fa-hashtag"></i>
+            </span>
+            <input
+              type="number"
+              [(ngModel)]="searchId"
+              (keyup.enter)="buscar()"
+              class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
+              placeholder="Ej. 1"
+            />
+          </div>
+        </div>
+        <div class="flex gap-2 w-full md:w-auto">
+          <button
+            (click)="buscar()"
+            [disabled]="loading()"
+            class="flex-1 md:flex-none px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors font-medium shadow-md text-sm flex justify-center items-center gap-2"
+          >
+            @if (loading()) {
+            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            Buscando... } @else { Buscar }
+          </button>
+          <button
+            (click)="limpiar()"
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium text-sm"
+          >
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Content -->
+    @if (user()) {
+    <div class="bg-white rounded-2xl shadow-md overflow-hidden w-full animate-fade-in">
+      <div class="flex flex-col md:flex-row">
+        <!-- Left Side - Avatar and Basic Info -->
+        <div
+          class="bg-sky-50 p-8 md:w-80 flex flex-col items-center justify-center border-r border-gray-100"
+        >
+          <div class="w-32 h-32 rounded-full overflow-hidden mb-6 shadow-lg bg-white">
+            <img
+              src="https://i.pravatar.cc/150?img={{ user()!.cod_usuario }}"
+              alt="Avatar"
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <h2 class="text-xl font-bold text-gray-800 text-center mb-2">
+            {{ user()!.nombres }} {{ user()!.apellidos }}
+          </h2>
+          <p class="text-sm text-gray-600 mb-4">{{ getNivelText(user()!.nivel) }}</p>
+          <span
+            class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium"
+            [ngClass]="{
+              'bg-green-100 text-green-700': user()!.estado === 1,
+              'bg-red-100 text-red-700': user()!.estado === 0
+            }"
+          >
+            <i class="fa-solid fa-circle text-[8px] mr-2"></i>
+            {{ getEstadoText(user()!.estado) }}
+          </span>
+        </div>
+
+        <!-- Right Side - Contact and Account Details -->
+        <div class="flex-1 p-8">
+          <!-- Contact Information -->
+          <div class="mb-8">
+            <h3 class="text-base font-semibold text-gray-800 mb-4 border-b pb-2">
+              Información de Contacto
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
+                <p class="text-sm font-medium text-gray-900">{{ user()!.correo }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Celular</p>
+                <p class="text-sm font-medium text-gray-900">
+                  {{ user()!.celular || 'No registrado' }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Details -->
+          <div>
+            <h3 class="text-base font-semibold text-gray-800 mb-4 border-b pb-2">
+              Detalles de la Cuenta
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Código de Usuario</p>
+                <p class="text-sm font-medium text-gray-900">
+                  USR-{{ user()!.cod_usuario.toString().padStart(5, '0') }}
+                </p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Nivel de Acceso</p>
+                <p class="text-sm font-medium text-gray-900">{{ getNivelText(user()!.nivel) }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Fecha de Ingreso</p>
+                <p class="text-sm font-medium text-gray-900">{{ user()!.fecha_ingreso }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Estado</p>
+                <p class="text-sm font-medium text-gray-900">{{ getEstadoText(user()!.estado) }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else if (!loading() && searchId()) {
+    <!-- Initial State or No Result (handled by toast, but kept for layout structure) -->
+    <div class="flex flex-col items-center justify-center py-12 text-gray-400">
+      <i class="fa-solid fa-user-magnifying-glass text-6xl mb-4"></i>
+      <p class="text-lg">Realiza una búsqueda para ver el perfil</p>
+    </div>
+    }
+  </div>
+</div>

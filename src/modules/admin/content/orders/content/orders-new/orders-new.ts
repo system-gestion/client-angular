@@ -165,14 +165,29 @@ export class OrdersNew {
       return;
     }
 
-    const subtotal = articulo.pvp * cantidad;
+    let precioFinal = articulo.pvp;
+
+    // Aplicar descuento si existe
+    if (articulo.tipo_descuento && articulo.tipo_descuento > 0) {
+      if (articulo.tipo_descuento === 1) {
+        // Descuento fijo
+        precioFinal = articulo.pvp - (articulo.valor_descuento || 0);
+      } else if (articulo.tipo_descuento === 2) {
+        // Descuento porcentual
+        precioFinal = articulo.pvp * (1 - (articulo.valor_descuento || 0) / 100);
+      }
+      // Asegurar que no sea negativo
+      precioFinal = Math.max(0, precioFinal);
+    }
+
+    const subtotal = precioFinal * cantidad;
     const nuevoDetalle: DetalleTemp = {
       cod_articulo: articulo.cod_articulo,
       cantidad,
       subtotal,
       estado: 1,
       nombre_articulo: articulo.nombre,
-      pvp: articulo.pvp,
+      pvp: articulo.pvp, // Guardamos el PVP original
     };
 
     this.detalles.update((d) => [...d, nuevoDetalle]);

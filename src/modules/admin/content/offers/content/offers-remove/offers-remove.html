@@ -1,1 +1,82 @@
-<p>offers-remove works!</p>
+<div class="flex-1 bg-gray-50 py-6 flex items-center justify-center">
+  <div class="max-w-6xl mx-auto w-full">
+    <!-- Header -->
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3 mb-1">
+          <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+            <i class="fa-solid fa-ban text-red-600 text-lg"></i>
+          </div>
+          <h1 class="text-xl font-bold text-gray-800">Baja de Ofertas</h1>
+        </div>
+        <p class="text-sm text-gray-600 mt-1 ml-13">Desactiva ofertas vigentes en artículos</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-md p-6">
+      <!-- Buscador -->
+      <div class="mb-6">
+        <div class="relative">
+          <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+            <i class="fa-solid fa-search"></i>
+          </span>
+          <input
+            type="text"
+            [ngModel]="filtroTexto()"
+            (ngModelChange)="filtroTexto.set($event)"
+            placeholder="Filtrar por nombre o código de artículo..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:border-red-500 transition-all"
+          />
+        </div>
+      </div>
+
+      <!-- Listado -->
+      @if (loadingList()) {
+      <div class="flex justify-center p-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
+      </div>
+      } @else if (ofertasActivas().length === 0) {
+      <div class="text-center p-8 text-gray-500">No hay ofertas activas para mostrar.</div>
+      } @else {
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+            <tr>
+              <th class="px-4 py-3">Artículo</th>
+              <th class="px-4 py-3">Stock</th>
+              <th class="px-4 py-3">PVP</th>
+              <th class="px-4 py-3">Descuento</th>
+              <th class="px-4 py-3 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (oferta of ofertasActivas(); track oferta.cod_articulo) {
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">
+                <div class="font-medium text-gray-900">{{ oferta.nombre }}</div>
+                <div class="text-xs text-gray-500">Cod: {{ oferta.cod_articulo }}</div>
+              </td>
+              <td class="px-4 py-3">{{ oferta.stock }}</td>
+              <td class="px-4 py-3">S/. {{ oferta.pvp.toFixed(2) }}</td>
+              <td class="px-4 py-3 text-green-600 font-medium">
+                @if(oferta.tipo_descuento === 1) { S/. }
+                {{ oferta.valor_descuento }}
+                @if(oferta.tipo_descuento === 2) { % }
+              </td>
+              <td class="px-4 py-3 text-center">
+                <button
+                  (click)="confirmarBaja(oferta)"
+                  class="text-red-600 hover:text-red-800 font-medium text-xs px-3 py-1 bg-red-50 rounded-lg border border-red-100 hover:bg-red-100 transition-colors"
+                >
+                  <i class="fa-solid fa-ban mr-1"></i> Desactivar
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -4,12 +4,7 @@ export type PathNode = {
 };
 
 export function buildPath(node: PathNode): string {
-
-  const findFullPath = (
-    obj: any,
-    target: PathNode,
-    path: string[] = []
-  ): string[] | null => {
+  const findFullPath = (obj: any, target: PathNode, path: string[] = []): string[] | null => {
     if (!obj || typeof obj !== 'object') return null;
 
     if (obj === target) {
@@ -21,9 +16,7 @@ export function buildPath(node: PathNode): string {
 
       const value = obj[key];
       const nextPath =
-        '_path' in obj && typeof obj._path === 'string'
-          ? [...path, obj._path]
-          : path;
+        '_path' in obj && typeof obj._path === 'string' ? [...path, obj._path] : path;
 
       const result = findFullPath(value, target, nextPath);
       if (result) return result;
@@ -49,15 +42,15 @@ export const PATH = {
   auth: {
     _path: 'auth',
     signIn: { _path: 'sign-in' },
-    signUp: { _path: 'sign-up'}
+    signUp: { _path: 'sign-up' },
   },
   admin: {
     _path: 'admin',
     profile: {
       _path: 'profile',
-      data: { _path: 'data'},
+      data: { _path: 'data' },
       update: { _path: 'update' },
-      commissions: { _path: 'commissions' }
+      commissions: { _path: 'commissions' },
     },
 
     myorders: {
@@ -66,7 +59,7 @@ export const PATH = {
       byDate: { _path: 'by-date' },
       byNumber: { _path: 'by-number' },
       completed: { _path: 'completed' },
-      cancelled: { _path: 'cancelled' }
+      cancelled: { _path: 'cancelled' },
     },
 
     orders: {
@@ -78,7 +71,7 @@ export const PATH = {
       byNumber: { _path: 'by-number' },
       completed: { _path: 'completed' },
       cancelled: { _path: 'cancelled' },
-      cancel: { _path: 'cancel' }
+      cancel: { _path: 'cancel' },
     },
 
     // Users (Supervisor)
@@ -89,21 +82,22 @@ export const PATH = {
       online: { _path: 'online' },
       profile: { _path: 'profile' },
       update: { _path: 'update' },
-      deactivate: { _path: 'deactivate' }
+      deactivate: { _path: 'deactivate' },
     },
 
     audit: {
       _path: 'audit',
       sessions: { _path: 'sessions' },
-      actions: { _path: 'actions' }
+      actions: { _path: 'actions' },
     },
 
     offers: {
       _path: 'offers',
       new: { _path: 'new' },
-      remove: { _path: 'remove' }
-    }
-  }
+      remove: { _path: 'remove' },
+      active: { _path: 'active' },
+    },
+  },
 } as const;
 
 export const ROUTE_CONFIG = {
@@ -156,9 +150,10 @@ export const ROUTE_CONFIG = {
     [buildPath(PATH.admin.audit.actions)]: [1],
 
     // Offers - Vendedores y clientes
-    [buildPath(PATH.admin.offers)]: [2, 3], // Clientes ven activas
-    [buildPath(PATH.admin.offers.new)]: [2], // Solo vendedores
-    [buildPath(PATH.admin.offers.remove)]: [2], // Solo vendedores
+    [buildPath(PATH.admin.offers)]: [2, 3],
+    [buildPath(PATH.admin.offers.new)]: [2],
+    [buildPath(PATH.admin.offers.remove)]: [2],
+    [buildPath(PATH.admin.offers.active)]: [2, 3],
   } as Record<string, number[]>,
 };
 

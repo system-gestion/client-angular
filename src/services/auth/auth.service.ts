@@ -2,13 +2,17 @@ import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { API_URL } from '@route/api.route';
-import { UsuarioLogin, LoginResponse, LogoutResponse, MeResponse } from '@interface/auth/auth.interface';
+import {
+  UsuarioLogin,
+  LoginResponse,
+  LogoutResponse,
+  MeResponse,
+} from '@interface/auth/auth.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
 
@@ -21,12 +25,11 @@ export class AuthService {
   numSesion = this.numSesionSignal.asReadonly();
   isAuthenticated = computed(() => this.userSignal() !== null && this.tokenSignal() !== null);
 
-  constructor() {
-  }
+  constructor() {}
 
   login(credenciales: UsuarioLogin): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(API_URL.auth.login, credenciales).pipe(
-      tap(response => {
+      tap((response) => {
         this.userSignal.set(response.usuario);
         this.tokenSignal.set(response.access_token);
         this.numSesionSignal.set(response.num_sesion);
@@ -39,21 +42,21 @@ export class AuthService {
     const sesion = num_sesion || this.numSesionSignal();
     if (!sesion) {
       this.clearSession();
-      return new Observable<LogoutResponse>(observer => {
+      return new Observable<LogoutResponse>((observer) => {
         observer.next({ message: 'Sesión cerrada localmente' });
         observer.complete();
       });
     }
 
-    return this.http.post<LogoutResponse>(API_URL.auth.logout(sesion), {}).pipe(
-      tap(() => this.clearSession())
-    );
+    return this.http
+      .post<LogoutResponse>(API_URL.auth.logout(sesion), {})
+      .pipe(tap(() => this.clearSession()));
   }
 
   getCurrentUser(cod_usuario: number): Observable<MeResponse> {
-    return this.http.get<MeResponse>(API_URL.auth.me(cod_usuario)).pipe(
-      tap(usuario => this.userSignal.set(usuario))
-    );
+    return this.http
+      .get<MeResponse>(API_URL.auth.me(cod_usuario))
+      .pipe(tap((usuario) => this.userSignal.set(usuario)));
   }
 
   hasNivel(nivel: number): boolean {
@@ -118,5 +121,10 @@ export class AuthService {
     } else {
       console.log('No session to restore');
     }
+  }
+  getCodCliente(): string | null {
+    const user = this.userSignal();
+    if (!user || user.nivel !== 3) return null;
+    return user.cod_cliente || null;
   }
 }

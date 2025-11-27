@@ -14,6 +14,7 @@ export interface MeResponse {
   fecha_ingreso: string;
   estado: number;
   fecha_baja?: string;
+  cod_cliente?: string;
 }
 
 export interface LoginResponse {

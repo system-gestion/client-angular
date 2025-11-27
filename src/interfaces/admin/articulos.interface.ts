@@ -3,6 +3,8 @@ export interface ArticuloResponse {
   nombre: string;
   pvp: number;
   stock: number;
+  tipo_descuento?: number;
+  valor_descuento?: number;
 }
 
 export interface ArticuloCreate {
@@ -16,6 +18,8 @@ export interface ArticuloUpdate {
   nombre?: string;
   pvp?: number;
   stock?: number;
+  tipo_descuento?: number;
+  valor_descuento?: number;
 }
 
 export interface OfertaResponse extends ArticuloResponse {

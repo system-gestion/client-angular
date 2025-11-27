@@ -69,9 +69,10 @@ export const routes: Routes = [
       // Offers routes
       { path: getPath(PATH.admin.offers), loadComponent: () => import('@module/admin/content/offers/offers').then(m => m.Offers),
         children: [
+          { path: getPath(PATH.admin.offers.active), loadComponent: () => import('@module/admin/content/offers/content/offers-active/offers-active').then(m => m.OffersActive) },
           { path: getPath(PATH.admin.offers.new), loadComponent: () => import('@module/admin/content/offers/content/offers-new/offers-new').then(m => m.OffersNew) },
           { path: getPath(PATH.admin.offers.remove), loadComponent: () => import('@module/admin/content/offers/content/offers-remove/offers-remove').then(m => m.OffersRemove) },
-          { path: '**', redirectTo: getPath(PATH.admin.offers), pathMatch: 'full'}
+          { path: '**', redirectTo: getPath(PATH.admin.offers.active), pathMatch: 'full'}
         ],
       },
 

@@ -8,10 +8,11 @@ export interface UsuarioResponse {
   fecha_ingreso: string;
   estado: number;
   fecha_baja?: string;
+  cod_cliente?: string;
 }
 
 export interface UsuarioCreate {
-  cod_usuario: number;
+  cod_usuario?: number;
   apellidos: string;
   nombres: string;
   nivel: number;

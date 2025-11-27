@@ -15,6 +15,7 @@ export interface SesionLogResponse {
   fecha_fin?: string;
   estado: number;
   nombre_usuario?: string;
+  correo_usuario?: string;
   detalles: DetalleSesionResponse[];
 }
 

@@ -7,16 +7,22 @@ import {
   UsuarioCreate,
   UsuarioUpdate,
   UsuarioOnline,
-  MessageResponse
+  MessageResponse,
 } from '@interface/admin/usuarios.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsuariosService {
   private http = inject(HttpClient);
 
-  list(params?: { skip?: number; limit?: number; estado?: number; nivel?: number }): Observable<UsuarioResponse[]> {
+  list(params?: {
+    skip?: number;
+    limit?: number;
+    estado?: number;
+    nivel?: number;
+    q?: string;
+  }): Observable<UsuarioResponse[]> {
     return this.http.get<UsuarioResponse[]>(API_URL.usuarios.list(params));
   }
 
