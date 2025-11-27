@@ -57,6 +57,16 @@ export const routes: Routes = [
         ]
       },
 
+      // Clients routes
+      { path: getPath(PATH.admin.clients), loadComponent: () => import('@module/admin/content/clients/clients').then(m => m.Clients),
+        children: [
+          { path: getPath(PATH.admin.clients.new), loadComponent: () => import('@module/admin/content/clients/content/clients-new/clients-new').then(m => m.ClientsNew) },
+          { path: getPath(PATH.admin.clients.search), loadComponent: () => import('@module/admin/content/clients/content/clients-search/clients-search').then(m => m.ClientsSearch) },
+          { path: getPath(PATH.admin.clients.update), loadComponent: () => import('@module/admin/content/clients/content/clients-update/clients-update').then(m => m.ClientsUpdate) },
+          { path: '**', redirectTo: getPath(PATH.admin.clients.new), pathMatch: 'full'}
+        ]
+      },
+
       // Audit routes
       { path: getPath(PATH.admin.audit), loadComponent: () => import('@module/admin/content/audit/audit').then(m => m.Audit),
         children: [

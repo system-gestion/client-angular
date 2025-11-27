@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { AuditoriaService } from '@service/admin/auditoria.service';
 import { DetalleSesionResponse } from '@interface/admin/auditoria.interface';
-import { AlertService } from '@service/alert.service';
 import { ToastService } from '@service/toast.service';
 import { RollbackDetails } from './components/rollback-details/rollback-details';
 
@@ -17,7 +16,6 @@ import { RollbackDetails } from './components/rollback-details/rollback-details'
 })
 export class AuditRollback implements OnInit {
   private auditoriaService = inject(AuditoriaService);
-  private alertService = inject(AlertService);
   private toastService = inject(ToastService);
 
   acciones = signal<DetalleSesionResponse[]>([]);
@@ -63,13 +61,7 @@ export class AuditRollback implements OnInit {
 
   openRollbackModal(accion: DetalleSesionResponse) {
     if (!accion.datos_json) {
-      this.alertService.error('Error', 'No hay datos de snapshot para esta acción', [
-        {
-          text: 'Cerrar',
-          style: 'danger',
-          action: () => this.alertService.close(),
-        },
-      ]);
+      this.toastService.error('No hay datos de snapshot para esta acción');
       return;
     }
     this.selectedAccion.set(accion);
@@ -90,27 +82,13 @@ export class AuditRollback implements OnInit {
       next: (res) => {
         this.loadingRollback.set(false);
         this.closeModal();
-        this.alertService.success('Éxito', res.message, [
-          {
-            text: 'Aceptar',
-            style: 'success',
-            action: () => {
-              this.alertService.close();
-              this.loadAcciones(); // Recargar lista
-            },
-          },
-        ]);
+        this.toastService.success(res.message || 'Rollback realizado exitosamente');
+        this.loadAcciones(); // Recargar lista
       },
       error: (err) => {
         console.error('Error en rollback', err);
         this.loadingRollback.set(false);
-        this.alertService.error('Error', err.error?.detail || 'Error al realizar rollback', [
-          {
-            text: 'Cerrar',
-            style: 'danger',
-            action: () => this.alertService.close(),
-          },
-        ]);
+        this.toastService.error(err.error?.detail || 'Error al realizar rollback');
       },
     });
   }
@@ -130,6 +108,8 @@ export class AuditRollback implements OnInit {
         return 'Inserción';
       case 3:
         return 'Eliminación';
+      case 4:
+        return 'Rollback';
       default:
         return 'Desconocido';
     }
@@ -137,14 +117,18 @@ export class AuditRollback implements OnInit {
 
   getAccionClass(accion: number): string {
     switch (accion) {
+      case 0:
+        return 'bg-gray-100 text-gray-800'; // Consulta
       case 1:
         return 'bg-blue-100 text-blue-800'; // Edición
       case 2:
         return 'bg-green-100 text-green-800'; // Inserción
       case 3:
         return 'bg-red-100 text-red-800'; // Eliminación
+      case 4:
+        return 'bg-purple-100 text-purple-800'; // Rollback
       default:
-        return 'bg-gray-100 text-gray-800'; // Consulta
+        return 'bg-gray-100 text-gray-800';
     }
   }
 }

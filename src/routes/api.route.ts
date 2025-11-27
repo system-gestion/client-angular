@@ -37,14 +37,16 @@ export const API_URL = {
 
   // Clientes
   clientes: {
-    list: (params?: { skip?: number; limit?: number }) => {
+    list: (params?: { skip?: number; limit?: number; q?: string; estado?: number }) => {
       const query = new URLSearchParams();
       if (params?.skip !== undefined) query.append('skip', params.skip.toString());
       if (params?.limit !== undefined) query.append('limit', params.limit.toString());
+      if (params?.q) query.append('q', params.q);
+      if (params?.estado !== undefined) query.append('estado', params.estado.toString());
       return `${BASE_URL}/clientes/?${query.toString()}`;
     },
     create: `${BASE_URL}/clientes/`,
-    search: (q: string) => `${BASE_URL}/clientes/search?q=${encodeURIComponent(q)}`,
+    search: (q: string) => `${BASE_URL}/clientes/?q=${encodeURIComponent(q)}`,
     get: (cod_cliente: string) => `${BASE_URL}/clientes/${cod_cliente}`,
     update: (cod_cliente: string) => `${BASE_URL}/clientes/${cod_cliente}`,
     delete: (cod_cliente: string) => `${BASE_URL}/clientes/${cod_cliente}`,

@@ -71,6 +71,15 @@ export class Toolbar {
       ]
     },
     {
+      label: 'CLIENTES',
+      path: buildPath(PATH.admin.clients),
+      items: [
+        { label: 'NUEVO', path: buildPath(PATH.admin.clients.new), action: () => this.navigate(buildPath(PATH.admin.clients.new)) },
+        { label: 'CONSULTAS', path: buildPath(PATH.admin.clients.search), action: () => this.navigate(buildPath(PATH.admin.clients.search)) },
+        { label: 'ACTUALIZAR', path: buildPath(PATH.admin.clients.update), action: () => this.navigate(buildPath(PATH.admin.clients.update)) }
+      ]
+    },
+    {
       label: 'REGISTRO',
       path: buildPath(PATH.admin.users),
       items: [

@@ -2,19 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_URL } from '@route/api.route';
-import {
-  ClienteResponse,
-  ClienteCreate,
-  ClienteUpdate
-} from '@interface/admin/clientes.interface';
+import { ClienteResponse, ClienteCreate, ClienteUpdate } from '@interface/admin/clientes.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClientesService {
   private http = inject(HttpClient);
 
-  list(params?: { skip?: number; limit?: number }): Observable<ClienteResponse[]> {
+  list(params?: { skip?: number; limit?: number; q?: string }): Observable<ClienteResponse[]> {
     return this.http.get<ClienteResponse[]>(API_URL.clientes.list(params));
   }
 

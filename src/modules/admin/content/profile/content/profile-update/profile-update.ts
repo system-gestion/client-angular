@@ -34,19 +34,38 @@ export class ProfileUpdate implements OnInit {
   confirmPassword = signal('');
 
   ngOnInit() {
+    // Obtener solo el ID del usuario desde localStorage
     const currentUser = this.authService.user();
-    if (currentUser) {
-      this.cod_usuario.set(currentUser.cod_usuario);
-      this.apellidos.set(currentUser.apellidos);
-      this.nombres.set(currentUser.nombres);
-      this.correo.set(currentUser.correo);
-      this.celular.set(currentUser.celular || '');
-      this.nivel.set(currentUser.nivel);
+    if (currentUser?.cod_usuario) {
+      this.loading.set(true);
+      // Hacer consulta al servidor para obtener datos actualizados
+      this.authService.getCurrentUser(currentUser.cod_usuario).subscribe({
+        next: (userData) => {
+          this.cod_usuario.set(userData.cod_usuario);
+          this.apellidos.set(userData.apellidos);
+          this.nombres.set(userData.nombres);
+          this.correo.set(userData.correo);
+          this.celular.set(userData.celular || '');
+          this.nivel.set(userData.nivel);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          console.error('Error al cargar datos del usuario:', err);
+          // Fallback a datos del localStorage si falla la consulta
+          this.cod_usuario.set(currentUser.cod_usuario);
+          this.apellidos.set(currentUser.apellidos);
+          this.nombres.set(currentUser.nombres);
+          this.correo.set(currentUser.correo);
+          this.celular.set(currentUser.celular || '');
+          this.nivel.set(currentUser.nivel);
+          this.loading.set(false);
+        },
+      });
     }
   }
 
   togglePasswordFields() {
-    this.showPasswordFields.update(v => !v);
+    this.showPasswordFields.update((v) => !v);
     if (!this.showPasswordFields()) {
       this.password.set('');
       this.confirmPassword.set('');
@@ -81,7 +100,7 @@ export class ProfileUpdate implements OnInit {
       apellidos: this.apellidos(),
       nombres: this.nombres(),
       correo: this.correo(),
-      celular: this.celular() || undefined
+      celular: this.celular() || undefined,
     };
 
     if (this.showPasswordFields() && this.password()) {
@@ -112,13 +131,13 @@ export class ProfileUpdate implements OnInit {
             setTimeout(() => {
               this.router.navigate(['/admin/profile/data']);
             }, 1000);
-          }
+          },
         });
       },
       error: (err) => {
         this.toastService.error(err.error?.detail || 'Error al actualizar el perfil');
         this.loading.set(false);
-      }
+      },
     });
   }
 

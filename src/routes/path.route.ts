@@ -85,6 +85,13 @@ export const PATH = {
       deactivate: { _path: 'deactivate' },
     },
 
+    clients: {
+      _path: 'clients',
+      new: { _path: 'new' },
+      search: { _path: 'search' },
+      update: { _path: 'update' },
+    },
+
     audit: {
       _path: 'audit',
       sessions: { _path: 'sessions' },
@@ -143,6 +150,12 @@ export const ROUTE_CONFIG = {
     [buildPath(PATH.admin.users.profile)]: [1],
     [buildPath(PATH.admin.users.update)]: [1],
     [buildPath(PATH.admin.users.deactivate)]: [1],
+
+    // Clients - Solo vendedores
+    [buildPath(PATH.admin.clients)]: [2],
+    [buildPath(PATH.admin.clients.new)]: [2],
+    [buildPath(PATH.admin.clients.search)]: [2],
+    [buildPath(PATH.admin.clients.update)]: [2],
 
     // Audit - Solo supervisores
     [buildPath(PATH.admin.audit)]: [1],

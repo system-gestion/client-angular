@@ -38,6 +38,8 @@ export class RollbackDetails {
         return 'Inserción';
       case 3:
         return 'Eliminación';
+      case 4:
+        return 'Rollback';
       default:
         return 'Desconocido';
     }
@@ -51,34 +53,71 @@ export class RollbackDetails {
         return 'bg-green-100 text-green-800';
       case 3:
         return 'bg-red-100 text-red-800';
+      case 4:
+        return 'bg-purple-100 text-purple-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   }
 
-  getFormattedJson(jsonString: string | undefined): string {
-    if (!jsonString) return '{}';
+  get parsedSnapshot(): any {
+    if (!this.accion?.datos_json) return null;
     try {
-      const obj = JSON.parse(jsonString);
-      return JSON.stringify(obj, null, 2);
+      return JSON.parse(this.accion.datos_json);
     } catch (e) {
-      return jsonString;
+      return null;
     }
   }
 
-  getTargetId(): string {
-    if (!this.accion?.datos_json) return '-';
-    try {
-      const data = JSON.parse(this.accion.datos_json);
+  get oldData(): any {
+    const snapshot = this.parsedSnapshot;
+    return snapshot?.old_data || null;
+  }
 
-      // Identificar ID según la tabla
-      if (this.accion.tabla === 'usuario') return '#' + (data.cod_usuario || '?');
-      if (this.accion.tabla === 'pedido') return '#' + (data.num_pedido || '?');
+  get newData(): any {
+    const snapshot = this.parsedSnapshot;
+    return snapshot?.new_data || null;
+  }
 
-      // Fallback genérico
-      return '#' + (data.id || data.codigo || data.cod_usuario || data.num_pedido || '?');
-    } catch (e) {
-      return '-';
+  // Legacy support or direct data access
+  get flatData(): any {
+    const snapshot = this.parsedSnapshot;
+    if (snapshot && !snapshot.old_data && !snapshot.new_data) {
+      return snapshot;
     }
+    return null;
+  }
+
+  getFormattedJson(data: any): string {
+    if (!data) return '{}';
+    return JSON.stringify(data, null, 2);
+  }
+
+  getTargetId(): string {
+    const snapshot = this.parsedSnapshot;
+    if (!snapshot) return '-';
+
+    // Try to find ID in any available data source
+    const data = snapshot.new_data || snapshot.old_data || snapshot;
+
+    if (!data) return '-';
+
+    // Identificar ID según la tabla
+    if (this.accion?.tabla === 'usuario') return '#' + (data.cod_usuario || '?');
+    if (this.accion?.tabla === 'pedido') return '#' + (data.num_pedido || '?');
+    if (this.accion?.tabla === 'articulo') return '#' + (data.cod_articulo || '?');
+    if (this.accion?.tabla === 'cliente') return '#' + (data.cod_cliente || '?');
+
+    // Fallback genérico
+    return (
+      '#' +
+      (data.id ||
+        data.codigo ||
+        data.cod_usuario ||
+        data.num_pedido ||
+        data.cod_articulo ||
+        data.cod_cliente ||
+        '?')
+    );
   }
 }

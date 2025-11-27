@@ -16,19 +16,37 @@ export class ProfileData implements OnInit {
   loading = signal(true);
 
   ngOnInit() {
+    // Obtener solo el ID del usuario desde localStorage
     const currentUser = this.authService.user();
-    if (currentUser) {
-      this.user.set(currentUser);
+    if (currentUser?.cod_usuario) {
+      // Hacer consulta al servidor para obtener datos actualizados
+      this.authService.getCurrentUser(currentUser.cod_usuario).subscribe({
+        next: (userData) => {
+          this.user.set(userData);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          console.error('Error al cargar datos del usuario:', err);
+          // Fallback a datos del localStorage si falla la consulta
+          this.user.set(currentUser);
+          this.loading.set(false);
+        },
+      });
+    } else {
       this.loading.set(false);
     }
   }
 
   getNivelText(nivel: number): string {
-    switch(nivel) {
-      case 1: return 'Supervisor';
-      case 2: return 'Vendedor';
-      case 3: return 'Cliente';
-      default: return 'Desconocido';
+    switch (nivel) {
+      case 1:
+        return 'Supervisor';
+      case 2:
+        return 'Vendedor';
+      case 3:
+        return 'Cliente';
+      default:
+        return 'Desconocido';
     }
   }
 

@@ -60,15 +60,86 @@
         </div>
       </div>
 
-      <!-- JSON Data -->
-      <div class="border border-gray-200 rounded-xl overflow-hidden">
-        <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
-          <h4 class="text-sm font-bold text-gray-700">Snapshot de Datos (JSON)</h4>
+      <!-- Data Comparison -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white">
+        <div
+          class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center"
+        >
+          <h4 class="text-sm font-bold text-gray-700">Detalle de Cambios</h4>
         </div>
-        <div class="p-4 bg-gray-900 overflow-x-auto">
-          <pre class="text-xs text-green-400 font-mono">{{
-            getFormattedJson(accion.datos_json)
-          }}</pre>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-200"
+        >
+          <!-- Old Data (Target State for Rollback) -->
+          @if (oldData || (!oldData && !newData && flatData)) {
+          <div class="flex flex-col h-full">
+            <div
+              class="px-4 py-2 bg-blue-50 border-b border-blue-100 flex justify-between items-center"
+            >
+              <span class="text-xs font-bold text-blue-800 uppercase">
+                <i class="fa-solid fa-clock-rotate-left mr-1"></i> Estado Anterior
+              </span>
+              @if (accion.accion === 1 || accion.accion === 3) {
+              <span class="text-[10px] bg-blue-200 text-blue-800 px-1.5 py-0.5 rounded"
+                >Se restaurará esto</span
+              >
+              }
+            </div>
+            <div class="p-0 bg-gray-900 overflow-x-auto flex-1">
+              <pre class="text-xs text-blue-300 font-mono p-4">{{
+                getFormattedJson(oldData || flatData)
+              }}</pre>
+            </div>
+          </div>
+          } @else if (accion.accion === 2) {
+          <!-- For Insert Rollback (Delete), Old Data is effectively "Nothing" -->
+          <div class="flex flex-col h-full opacity-50 bg-gray-50">
+            <div class="px-4 py-2 bg-gray-100 border-b border-gray-200">
+              <span class="text-xs font-bold text-gray-500 uppercase">Estado Anterior</span>
+            </div>
+            <div class="p-8 flex items-center justify-center h-full text-gray-400 text-sm italic">
+              (No existía registro)
+            </div>
+          </div>
+          }
+
+          <!-- New Data (Current State) -->
+          @if (newData || (!oldData && !newData && flatData)) {
+          <div class="flex flex-col h-full">
+            <div
+              class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex justify-between items-center"
+            >
+              <span class="text-xs font-bold text-gray-600 uppercase">
+                <i class="fa-solid fa-circle-check mr-1"></i> Estado Actual
+              </span>
+              @if (accion.accion === 2) {
+              <span class="text-[10px] bg-red-100 text-red-800 px-1.5 py-0.5 rounded"
+                >Se eliminará esto</span
+              >
+              } @else {
+              <span class="text-[10px] bg-gray-200 text-gray-800 px-1.5 py-0.5 rounded"
+                >Se reemplazará esto</span
+              >
+              }
+            </div>
+            <div class="p-0 bg-gray-900 overflow-x-auto flex-1">
+              <pre class="text-xs text-green-400 font-mono p-4">{{
+                getFormattedJson(newData || flatData)
+              }}</pre>
+            </div>
+          </div>
+          } @else if (accion.accion === 3) {
+          <!-- For Delete Rollback (Restore), New Data is effectively "Nothing" -->
+          <div class="flex flex-col h-full opacity-50 bg-gray-50">
+            <div class="px-4 py-2 bg-gray-100 border-b border-gray-200">
+              <span class="text-xs font-bold text-gray-500 uppercase">Estado Actual</span>
+            </div>
+            <div class="p-8 flex items-center justify-center h-full text-gray-400 text-sm italic">
+              (Registro eliminado)
+            </div>
+          </div>
+          }
         </div>
       </div>
       }
@@ -94,7 +165,7 @@
       >
         @if (loading) {
         <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-        } Confirmar Rollback
+        } Confirmar
       </button>
     </div>
   </div>

@@ -8,6 +8,7 @@ export interface DetalleSesionResponse {
   nombre_usuario?: string;
   accion_text?: string;
   datos_json?: string;
+  rollback_realizado?: number; // 0 = no, 1 = sí
 }
 
 export interface SesionLogResponse {
@@ -39,4 +40,10 @@ export interface ActividadUsuario {
   sesiones_activas: number;
   total_acciones: number;
   ultima_sesion?: string;
+}
+
+export interface AuditSnapshot {
+  old_data?: Record<string, any> | null;
+  new_data?: Record<string, any> | null;
+  [key: string]: any; // Fallback for legacy structure
 }
