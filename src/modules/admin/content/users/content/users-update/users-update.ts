@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { buildPath, PATH } from '@route/path.route';
   templateUrl: './users-update.html',
   styleUrl: './users-update.css',
 })
-export class UsersUpdate {
+export class UsersUpdate implements OnInit, OnDestroy {
   private usuariosService = inject(UsuariosService);
   private toastService = inject(ToastService);
   private router = inject(Router);
@@ -34,20 +34,59 @@ export class UsersUpdate {
   password = signal('');
   confirmPassword = signal('');
 
+  // Lock Status
+  isLockedByOther = signal(false);
+  lockOwner = signal('');
+
+  constructor() {
+    // Reaccionar a cambios en el estado del lock
+    effect(() => {
+      const status = this.usuariosService.lockStatus();
+      if (status.status === 'LOCKED') {
+        this.isLockedByOther.set(true);
+        this.lockOwner.set(status.owner || 'Otro supervisor');
+        this.toastService.warning(`El usuario está siendo editado por: ${status.owner}`);
+      } else {
+        this.isLockedByOther.set(false);
+        this.lockOwner.set('');
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.usuariosService.connectWs();
+  }
+
+  ngOnDestroy() {
+    if (this.user()) {
+      this.usuariosService.releaseLock(this.user()!.cod_usuario);
+    }
+    this.usuariosService.disconnectWs();
+  }
+
   buscar() {
     if (!this.searchId()) {
       this.toastService.warning('Ingrese un código de usuario');
       return;
     }
 
+    // Si ya había uno cargado, liberar su lock
+    if (this.user()) {
+      this.usuariosService.releaseLock(this.user()!.cod_usuario);
+    }
+
     this.loading.set(true);
     this.user.set(null);
+    this.isLockedByOther.set(false); // Reset lock status local
 
     this.usuariosService.get(this.searchId()!).subscribe({
       next: (data) => {
         this.user.set(data);
         this.populateForm(data);
         this.loading.set(false);
+
+        // Solicitar lock
+        this.usuariosService.requestLock(data.cod_usuario);
       },
       error: (err) => {
         this.loading.set(false);
@@ -78,6 +117,11 @@ export class UsersUpdate {
 
   actualizar() {
     if (!this.user()) return;
+
+    if (this.isLockedByOther()) {
+      this.toastService.error(`No puede editar. Usuario bloqueado por: ${this.lockOwner()}`);
+      return;
+    }
 
     // Validaciones
     if (!this.apellidos() || !this.nombres() || !this.correo()) {
@@ -130,6 +174,9 @@ export class UsersUpdate {
   }
 
   limpiar() {
+    if (this.user()) {
+      this.usuariosService.releaseLock(this.user()!.cod_usuario);
+    }
     this.searchId.set(null);
     this.user.set(null);
     this.apellidos.set('');
@@ -141,9 +188,13 @@ export class UsersUpdate {
     this.password.set('');
     this.confirmPassword.set('');
     this.showPasswordFields.set(false);
+    this.isLockedByOther.set(false);
   }
 
   cancelar() {
+    if (this.user()) {
+      this.usuariosService.releaseLock(this.user()!.cod_usuario);
+    }
     this.router.navigate(['/' + buildPath(PATH.admin.users.search)]);
   }
 }

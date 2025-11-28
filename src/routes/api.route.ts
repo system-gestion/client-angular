@@ -199,4 +199,10 @@ export const API_URL = {
   storage: {
     upload: `${BASE_URL}/storage/upload`,
   },
+
+  // WebSockets
+  ws: {
+    usersEditing: (supervisorName: string) =>
+      `ws://localhost:8000/ws/users/editing?supervisor_name=${encodeURIComponent(supervisorName)}`,
+  },
 };
