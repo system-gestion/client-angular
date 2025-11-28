@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UsuariosService } from '@service/admin/usuarios.service';
 import { UsuarioResponse } from '@interface/admin/usuarios.interface';
+import { ToastService } from '@service/toast.service';
 
 @Component({
   selector: 'app-users-search',
@@ -12,10 +13,10 @@ import { UsuarioResponse } from '@interface/admin/usuarios.interface';
 })
 export class UsersSearch {
   private usuariosService = inject(UsuariosService);
+  private toastService = inject(ToastService);
 
   usuarios = signal<UsuarioResponse[]>([]);
   loading = signal(false);
-  error = signal<string | null>(null);
 
   // Filters
   q = signal('');
@@ -24,7 +25,6 @@ export class UsersSearch {
 
   buscar() {
     this.loading.set(true);
-    this.error.set(null);
 
     const params: any = {};
     if (this.q()) params.q = this.q();
@@ -35,9 +35,12 @@ export class UsersSearch {
       next: (data) => {
         this.usuarios.set(data);
         this.loading.set(false);
+        if (data.length === 0) {
+          this.toastService.info('No se encontraron usuarios con los filtros seleccionados');
+        }
       },
       error: (err) => {
-        this.error.set('Error al buscar usuarios');
+        this.toastService.error('Error al buscar usuarios');
         this.loading.set(false);
       },
     });

@@ -1,4 +1,4 @@
-import { Injectable, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { API_URL } from '@route/api.route';
@@ -14,7 +14,6 @@ import {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private platformId = inject(PLATFORM_ID);
 
   private userSignal = signal<MeResponse | null>(null);
   private tokenSignal = signal<string | null>(null);

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PedidosService } from '@service/admin/pedidos.service';
 import { PedidoResponse } from '@interface/admin/pedidos.interface';
+import { ToastService } from '@service/toast.service';
 
 @Component({
   selector: 'app-orders-search',
@@ -12,10 +13,10 @@ import { PedidoResponse } from '@interface/admin/pedidos.interface';
 })
 export class OrdersSearch {
   private pedidosService = inject(PedidosService);
+  private toastService = inject(ToastService);
 
   pedidos = signal<PedidoResponse[]>([]);
   loading = signal(false);
-  error = signal<string | null>(null);
 
   // Totales
   importeTotal = computed(() => this.pedidos().reduce((sum, p) => sum + (p.importe || 0), 0));
@@ -29,7 +30,6 @@ export class OrdersSearch {
 
   buscar() {
     this.loading.set(true);
-    this.error.set(null);
 
     const params: any = {};
     if (this.cod_cliente()) params.cod_cliente = this.cod_cliente();
@@ -42,11 +42,14 @@ export class OrdersSearch {
       next: (data) => {
         this.pedidos.set(data);
         this.loading.set(false);
+        if (data.length === 0) {
+          this.toastService.info('No se encontraron pedidos con los filtros seleccionados');
+        }
       },
       error: (err) => {
-        this.error.set('Error al buscar pedidos');
+        this.toastService.error('Error al buscar pedidos');
         this.loading.set(false);
-      }
+      },
     });
   }
 

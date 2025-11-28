@@ -8,6 +8,7 @@
     "baseUrl": "./src",
     "paths": {
       "@app/*": ["app/*"],
+      "@db/*": ["db/*"],
       "@service/*": ["services/*"],
       "@type/*": ["types/*"],
       "@interface/*": ["interfaces/*"],

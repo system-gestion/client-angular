@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClientesService } from '@service/admin/clientes.service';
 import { ClienteResponse } from '@interface/admin/clientes.interface';
+import { ToastService } from '@service/toast.service';
 
 @Component({
   selector: 'app-clients-search',
@@ -12,10 +13,10 @@ import { ClienteResponse } from '@interface/admin/clientes.interface';
 })
 export class ClientsSearch {
   private clientesService = inject(ClientesService);
+  private toastService = inject(ToastService);
 
   clientes = signal<ClienteResponse[]>([]);
   loading = signal(false);
-  error = signal<string | null>(null);
 
   // Filters
   q = signal('');
@@ -23,7 +24,6 @@ export class ClientsSearch {
 
   buscar() {
     this.loading.set(true);
-    this.error.set(null);
 
     const params: any = {};
     if (this.q()) params.q = this.q();
@@ -33,9 +33,12 @@ export class ClientsSearch {
       next: (data) => {
         this.clientes.set(data);
         this.loading.set(false);
+        if (data.length === 0) {
+          this.toastService.info('No se encontraron clientes con los filtros seleccionados');
+        }
       },
       error: (err) => {
-        this.error.set('Error al buscar clientes');
+        this.toastService.error('Error al buscar clientes');
         this.loading.set(false);
       },
     });

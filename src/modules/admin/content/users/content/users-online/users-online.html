@@ -1,121 +1,109 @@
-<div class="flex-1 bg-gray-50 py-6 flex items-center justify-center">
+<div class="flex-1 bg-gray-50 p-6 flex items-center justify-center">
   <div class="max-w-6xl mx-auto w-full">
-    <div class="flex-1 bg-gray-50 py-6 flex items-center justify-center">
-      <div class="max-w-6xl mx-auto w-full">
-        <!-- Header -->
-        <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 class="text-xl font-bold text-gray-800">Usuarios Activos</h1>
-            <p class="text-sm text-gray-600 mt-1">Monitoreo de usuarios y sesiones activas</p>
-          </div>
+    <!-- Header -->
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-xl font-bold text-gray-800">Usuarios Activos</h1>
+        <p class="text-sm text-gray-600 mt-1">Monitoreo de usuarios y sesiones activas</p>
+      </div>
 
-          <!-- Search -->
-          <div class="relative w-full md:w-64">
-            <span
-              class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none"
-            >
-              <i class="fa-solid fa-search"></i>
-            </span>
-            <input
-              type="text"
-              [(ngModel)]="search"
-              placeholder="Buscar usuario..."
-              class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-400"
-            />
-          </div>
-        </div>
+      <!-- Search -->
+      <div class="relative w-full md:w-64">
+        <span class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
+          <i class="fa-solid fa-search"></i>
+        </span>
+        <input
+          type="text"
+          [(ngModel)]="search"
+          placeholder="Buscar usuario..."
+          class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-400"
+        />
+      </div>
+    </div>
 
-        <!-- Table -->
-        <div class="bg-white rounded-2xl shadow-md overflow-hidden">
-          <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left">
-              <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
-                <tr>
-                  <th class="px-6 py-4">Usuario</th>
-                  <th class="px-6 py-4">Nivel</th>
-                  <th class="px-6 py-4">Estado Sesión</th>
-                  <th class="px-6 py-4">Última Actividad</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-100">
-                @if (loading()) {
-                <tr>
-                  <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                    <div class="flex items-center justify-center gap-2">
-                      <div
-                        class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"
-                      ></div>
-                      Cargando usuarios...
+    <!-- Table -->
+    <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left">
+          <thead class="bg-gray-50 text-gray-600 font-medium border-b border-gray-100">
+            <tr>
+              <th class="px-6 py-4">Usuario</th>
+              <th class="px-6 py-4">Nivel</th>
+              <th class="px-6 py-4">Estado Sesión</th>
+              <th class="px-6 py-4">Última Actividad</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @if (loading()) {
+            <tr>
+              <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                <div class="flex items-center justify-center gap-2">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                  Cargando usuarios...
+                </div>
+              </td>
+            </tr>
+            } @else if (filteredUsers().length === 0) {
+            <tr>
+              <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                No se encontraron usuarios activos
+              </td>
+            </tr>
+            } @else { @for (user of filteredUsers(); track user.cod_usuario) {
+            <tr class="hover:bg-gray-50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                    <img
+                      src="https://i.pravatar.cc/150?img={{ user.cod_usuario }}"
+                      alt="Avatar"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <div class="font-medium text-gray-900">
+                      {{ user.nombres }} {{ user.apellidos }}
                     </div>
-                  </td>
-                </tr>
-                } @else if (filteredUsers().length === 0) {
-                <tr>
-                  <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                    No se encontraron usuarios activos
-                  </td>
-                </tr>
-                } @else { @for (user of filteredUsers(); track user.cod_usuario) {
-                <tr class="hover:bg-gray-50 transition-colors">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3">
-                      <div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden shrink-0">
-                        <img
-                          src="https://i.pravatar.cc/150?img={{ user.cod_usuario }}"
-                          alt="Avatar"
-                          class="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <div class="font-medium text-gray-900">
-                          {{ user.nombres }} {{ user.apellidos }}
-                        </div>
-                        <div class="text-xs text-gray-500">{{ user.correo }}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
+                    <div class="text-xs text-gray-500">{{ user.correo }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                >
+                  {{ getNivelText(user.nivel) }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                @if (user.sesion_activa) {
+                <span class="inline-flex items-center gap-1.5 text-green-600 font-medium text-xs">
+                  <span class="relative flex h-2 w-2">
                     <span
-                      class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
-                    >
-                      {{ getNivelText(user.nivel) }}
-                    </span>
-                  </td>
-                  <td class="px-6 py-4">
-                    @if (user.sesion_activa) {
-                    <span
-                      class="inline-flex items-center gap-1.5 text-green-600 font-medium text-xs"
-                    >
-                      <span class="relative flex h-2 w-2">
-                        <span
-                          class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-                        ></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                      </span>
-                      Online
-                    </span>
-                    } @else {
-                    <span
-                      class="inline-flex items-center gap-1.5 text-gray-500 font-medium text-xs"
-                    >
-                      <span class="h-2 w-2 rounded-full bg-gray-300"></span>
-                      Offline
-                    </span>
-                    }
-                  </td>
-                  <td class="px-6 py-4 text-gray-500">
-                    {{
-                      user.ultima_actividad
-                        ? (user.ultima_actividad | date : 'medium')
-                        : 'Sin actividad reciente'
-                    }}
-                  </td>
-                </tr>
-                } }
-              </tbody>
-            </table>
-          </div>
-        </div>
+                      class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                    ></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                  </span>
+                  Online
+                </span>
+                } @else {
+                <span class="inline-flex items-center gap-1.5 text-gray-500 font-medium text-xs">
+                  <span class="h-2 w-2 rounded-full bg-gray-300"></span>
+                  Offline
+                </span>
+                }
+              </td>
+              <td class="px-6 py-4 text-gray-500">
+                {{
+                  user.ultima_actividad
+                    ? (user.ultima_actividad | date : 'medium')
+                    : 'Sin actividad reciente'
+                }}
+              </td>
+            </tr>
+            } }
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

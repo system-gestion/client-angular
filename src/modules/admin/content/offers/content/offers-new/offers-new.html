@@ -1,4 +1,4 @@
-<div class="flex-1 bg-gray-50 py-6 flex items-center justify-center">
+<div class="flex-1 bg-gray-50 p-6 flex items-center justify-center">
   <div class="max-w-6xl mx-auto w-full">
     <!-- Header -->
     <div class="mb-6">
@@ -150,8 +150,8 @@
                   [(ngModel)]="tipo_descuento"
                   class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm bg-white appearance-none"
                 >
-                  <option [value]="1">Fijo (S/.)</option>
-                  <option [value]="2">Porcentual (%)</option>
+                  <option [ngValue]="1">Fijo (S/.)</option>
+                  <option [ngValue]="2">Porcentual (%)</option>
                 </select>
                 <span
                   class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none"

@@ -1,18 +1,30 @@
-<div class="min-h-screen flex justify-center items-center bg-linear-to-br from-gray-50 to-gray-100 p-5">
+<div
+  class="min-h-screen flex justify-center items-center bg-linear-to-br from-gray-50 to-gray-100 p-5"
+>
   <div class="bg-white rounded-2xl shadow-xl w-full max-w-md px-10 py-12">
     <!-- Logo -->
     <div class="flex justify-center mb-8">
-      <div class="w-20 h-20 rounded-full bg-linear-to-r from-blue-600 to-blue-800 p-3 shadow-lg flex items-center justify-center">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Logo" class="w-full h-full object-contain">
+      <div
+        class="w-20 h-20 rounded-full bg-linear-to-r from-blue-600 to-blue-800 p-3 shadow-lg flex items-center justify-center"
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+          alt="Logo"
+          class="w-full h-full object-contain"
+        />
       </div>
     </div>
 
     <form (ngSubmit)="onLogin()" class="flex flex-col gap-6">
       <!-- Campo Usuario -->
       <div class="flex flex-col gap-2">
-        <label for="usuario" class="text-xs font-semibold text-blue-700 tracking-wider uppercase">USUARIO</label>
+        <label for="usuario" class="text-xs font-semibold text-blue-700 tracking-wider uppercase"
+          >USUARIO</label
+        >
         <div class="relative">
-          <i class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+          <i
+            class="fa-solid fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"
+          ></i>
           <input
             type="email"
             id="usuario"
@@ -29,9 +41,13 @@
 
       <!-- Campo Contraseña -->
       <div class="flex flex-col gap-2">
-        <label for="contrasena" class="text-xs font-semibold text-blue-700 tracking-wider uppercase">CONTRASEÑA</label>
+        <label for="contrasena" class="text-xs font-semibold text-blue-700 tracking-wider uppercase"
+          >CONTRASEÑA</label
+        >
         <div class="relative">
-          <i class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"></i>
+          <i
+            class="fa-solid fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"
+          ></i>
           <input
             [type]="showPassword() ? 'text' : 'password'"
             id="contrasena"
@@ -54,7 +70,28 @@
       <!-- Campo Perfil -->
       <div class="flex flex-col gap-2">
         <label class="text-xs font-semibold text-blue-700 tracking-wider uppercase">PERFIL</label>
-        <div class="grid grid-cols-3 gap-2">
+        <!-- Select para Móvil -->
+        <div class="relative md:hidden">
+          <i
+            class="fa-solid fa-users absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"
+          ></i>
+          <select
+            [(ngModel)]="nivelSeleccionado"
+            name="nivel"
+            class="w-full pl-12 pr-4 py-3.5 border border-gray-300 rounded-lg text-sm text-gray-700 bg-gray-50 focus:bg-white focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all appearance-none"
+          >
+            <option [ngValue]="null" disabled selected>SELECCIONE UN PERFIL</option>
+            <option [ngValue]="1">SUPERVISOR</option>
+            <option [ngValue]="2">VENDEDOR</option>
+            <option [ngValue]="3">CLIENTE</option>
+          </select>
+          <i
+            class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"
+          ></i>
+        </div>
+
+        <!-- Botones para Desktop -->
+        <div class="hidden md:grid grid-cols-3 gap-2">
           <button
             type="button"
             (click)="seleccionarPerfil('SUPERVISOR', 1)"
