@@ -204,5 +204,7 @@ export const API_URL = {
   ws: {
     usersEditing: (supervisorName: string) =>
       `ws://localhost:8000/ws/users/editing?supervisor_name=${encodeURIComponent(supervisorName)}`,
+    clientesEditing: (vendedorName: string) =>
+      `ws://localhost:8000/ws/clientes/editing?vendedor_name=${encodeURIComponent(vendedorName)}`,
   },
 };

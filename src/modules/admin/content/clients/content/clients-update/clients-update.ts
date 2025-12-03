@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,7 +13,7 @@ import { buildPath, PATH } from '@route/path.route';
   templateUrl: './clients-update.html',
   styleUrl: './clients-update.css',
 })
-export class ClientsUpdate {
+export class ClientsUpdate implements OnInit, OnDestroy {
   private clientesService = inject(ClientesService);
   private toastService = inject(ToastService);
   private router = inject(Router);
@@ -33,20 +33,59 @@ export class ClientsUpdate {
   password = signal('');
   confirmPassword = signal('');
 
+  // Lock Status
+  isLockedByOther = signal(false);
+  lockOwner = signal('');
+
+  constructor() {
+    // Reaccionar a cambios en el estado del lock
+    effect(() => {
+      const status = this.clientesService.lockStatus();
+      if (status.status === 'LOCKED') {
+        this.isLockedByOther.set(true);
+        this.lockOwner.set(status.owner || 'Otro usuario');
+        this.toastService.warning(`El cliente está siendo editado por: ${status.owner}`);
+      } else {
+        this.isLockedByOther.set(false);
+        this.lockOwner.set('');
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.clientesService.connectWs();
+  }
+
+  ngOnDestroy() {
+    if (this.cliente()) {
+      this.clientesService.releaseLock(this.cliente()!.cod_cliente);
+    }
+    this.clientesService.disconnectWs();
+  }
+
   buscar() {
     if (!this.searchId().trim()) {
       this.toastService.warning('Ingrese un código de cliente');
       return;
     }
 
+    // Si ya había uno cargado, liberar su lock
+    if (this.cliente()) {
+      this.clientesService.releaseLock(this.cliente()!.cod_cliente);
+    }
+
     this.loading.set(true);
     this.cliente.set(null);
+    this.isLockedByOther.set(false); // Reset lock status local
 
     this.clientesService.get(this.searchId()).subscribe({
       next: (data) => {
         this.cliente.set(data);
         this.populateForm(data);
         this.loading.set(false);
+
+        // Solicitar lock
+        this.clientesService.requestLock(data.cod_cliente);
       },
       error: (err) => {
         this.loading.set(false);
@@ -76,6 +115,11 @@ export class ClientsUpdate {
 
   actualizar() {
     if (!this.cliente()) return;
+
+    if (this.isLockedByOther()) {
+      this.toastService.error(`No puede editar. Cliente bloqueado por: ${this.lockOwner()}`);
+      return;
+    }
 
     // Validaciones
     if (!this.apellidos().trim()) {

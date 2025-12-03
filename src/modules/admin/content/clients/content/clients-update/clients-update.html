@@ -49,9 +49,29 @@
     <!-- Update Form -->
     @if (cliente()) {
     <div class="bg-white rounded-2xl shadow-md overflow-hidden animate-fade-in">
-      <div class="p-8">
-        <!-- Avatar y Campos superiores -->
-        <div class="flex flex-col md:flex-row gap-6 mb-6">
+      <form (ngSubmit)="actualizar()">
+        <fieldset [disabled]="isLockedByOther()" class="contents">
+          <div class="p-8">
+            <!-- Lock Warning -->
+            @if (isLockedByOther()) {
+            <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg animate-fade-in">
+              <div class="flex items-center">
+                <div class="shrink-0">
+                  <i class="fa-solid fa-lock text-red-500 text-xl"></i>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-red-700 font-bold">Edición Bloqueada</p>
+                  <p class="text-sm text-red-600">
+                    El cliente está siendo editado por:
+                    <span class="font-semibold">{{ lockOwner() }}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+            }
+
+            <!-- Avatar y Campos superiores -->
+            <div class="flex flex-col md:flex-row gap-6 mb-6">
           <!-- Avatar -->
           <div class="shrink-0 flex flex-col items-center">
             <div
@@ -210,6 +230,7 @@
         <!-- Buttons -->
         <div class="flex gap-3 justify-end mt-8 border-t border-gray-100 pt-6">
           <button
+            type="button"
             (click)="cancelar()"
             [disabled]="loading()"
             class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 disabled:bg-gray-50 disabled:text-gray-400 transition-colors font-medium text-sm"
@@ -217,8 +238,8 @@
             Cancelar
           </button>
           <button
-            (click)="actualizar()"
-            [disabled]="loading()"
+            type="submit"
+            [disabled]="loading() || isLockedByOther()"
             class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400 transition-colors font-medium text-sm flex items-center gap-2"
           >
             @if (loading()) {
@@ -227,7 +248,9 @@
           </button>
         </div>
       </div>
-    </div>
+    </fieldset>
+  </form>
+</div>
     } @else if (!loading() && searchId()) {
     <div class="flex flex-col items-center justify-center py-12 text-gray-400">
       <i class="fa-solid fa-user-pen text-6xl mb-4"></i>
