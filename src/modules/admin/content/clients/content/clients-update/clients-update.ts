@@ -24,11 +24,11 @@ export class ClientsUpdate {
   loading = signal(false);
 
   // Form
-  nombre = signal('');
+  apellidos = signal('');
+  nombres = signal('');
   direccion = signal('');
-  telefono = signal('');
-  correo = signal('');
   celular = signal('');
+  correo = signal('');
   showPasswordFields = signal(false);
   password = signal('');
   confirmPassword = signal('');
@@ -56,12 +56,11 @@ export class ClientsUpdate {
   }
 
   populateForm(data: ClienteResponse) {
-    this.nombre.set(data.nombre);
+    this.apellidos.set(data.apellidos || '');
+    this.nombres.set(data.nombres || '');
     this.direccion.set(data.direccion || '');
-    // Preferir teléfono, si no hay, usar celular
-    this.telefono.set(data.telefono || data.celular || '');
-    this.correo.set(data.correo || '');
     this.celular.set(data.celular || '');
+    this.correo.set(data.correo || '');
     this.showPasswordFields.set(false);
     this.password.set('');
     this.confirmPassword.set('');
@@ -79,12 +78,12 @@ export class ClientsUpdate {
     if (!this.cliente()) return;
 
     // Validaciones
-    if (!this.nombre().trim()) {
-      this.toastService.warning('El nombre es obligatorio');
+    if (!this.apellidos().trim()) {
+      this.toastService.warning('Los apellidos son obligatorios');
       return;
     }
-    if (this.nombre().trim().split(' ').length < 2) {
-      this.toastService.warning('El nombre debe tener al menos dos palabras (Nombre y Apellido)');
+    if (!this.nombres().trim()) {
+      this.toastService.warning('Los nombres son obligatorios');
       return;
     }
     if (!this.correo().trim()) {
@@ -110,11 +109,11 @@ export class ClientsUpdate {
     this.loading.set(true);
 
     const updateData: ClienteUpdate = {
-      nombre: this.nombre(),
+      apellidos: this.apellidos(),
+      nombres: this.nombres(),
       direccion: this.direccion() || undefined,
-      telefono: this.telefono() || undefined,
+      celular: this.celular() || undefined,
       correo: this.correo(),
-      celular: this.telefono() || undefined, // Usar teléfono como celular
     };
 
     if (this.showPasswordFields() && this.password()) {
@@ -138,11 +137,11 @@ export class ClientsUpdate {
   limpiar() {
     this.searchId.set('');
     this.cliente.set(null);
-    this.nombre.set('');
+    this.apellidos.set('');
+    this.nombres.set('');
     this.direccion.set('');
-    this.telefono.set('');
-    this.correo.set('');
     this.celular.set('');
+    this.correo.set('');
     this.password.set('');
     this.confirmPassword.set('');
     this.showPasswordFields.set(false);

@@ -1,5 +1,5 @@
 const BASE_URL_LOCAL = 'http://localhost:8000';
-const BASE_URL_GLOBAL = 'https://your-production-url.com';
+const BASE_URL_GLOBAL = 'http://34.59.106.81:8000';
 
 const BASE_URL = BASE_URL_LOCAL;
 

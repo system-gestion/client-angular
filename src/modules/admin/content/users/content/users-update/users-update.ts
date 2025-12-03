@@ -33,6 +33,7 @@ export class UsersUpdate implements OnInit, OnDestroy {
   estado = signal(1);
   password = signal('');
   confirmPassword = signal('');
+  isClienteUser = signal(false); // Nueva señal para detectar si es Cliente
 
   // Lock Status
   isLockedByOther = signal(false);
@@ -102,6 +103,7 @@ export class UsersUpdate implements OnInit, OnDestroy {
     this.celular.set(data.celular || '');
     this.nivel.set(data.nivel);
     this.estado.set(data.estado);
+    this.isClienteUser.set(data.nivel === 3); // Detectar si es Cliente
     this.showPasswordFields.set(false);
     this.password.set('');
     this.confirmPassword.set('');

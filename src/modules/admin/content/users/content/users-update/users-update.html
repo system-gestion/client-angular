@@ -167,11 +167,16 @@
                       <select
                         [(ngModel)]="nivel"
                         name="nivel"
+                        [disabled]="isClienteUser()"
+                        [class.bg-gray-100]="isClienteUser()"
+                        [class.cursor-not-allowed]="isClienteUser()"
                         class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800 bg-white appearance-none"
                       >
                         <option [value]="1">Supervisor</option>
                         <option [value]="2">Vendedor</option>
+                        @if (isClienteUser()) {
                         <option [value]="3">Cliente</option>
+                        }
                       </select>
                       <span
                         class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none"
@@ -179,6 +184,12 @@
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                       </span>
                     </div>
+                    @if (isClienteUser()) {
+                    <p class="mt-1 text-xs text-amber-600">
+                      <i class="fa-solid fa-lock mr-1"></i>
+                      Los usuarios tipo Cliente no pueden cambiar de rol
+                    </p>
+                    }
                   </div>
 
                   <!-- Estado -->
@@ -190,7 +201,8 @@
                       <select
                         [(ngModel)]="estado"
                         name="estado"
-                        class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800 bg-white appearance-none"
+                        disabled
+                        class="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 cursor-not-allowed appearance-none"
                       >
                         <option [value]="1">Activo</option>
                         <option [value]="0">Inactivo</option>
@@ -201,6 +213,10 @@
                         <i class="fa-solid fa-chevron-down text-xs"></i>
                       </span>
                     </div>
+                    <p class="mt-1 text-xs text-gray-500">
+                      <i class="fa-solid fa-lock mr-1"></i>
+                      El estado del usuario no se puede modificar desde aquí
+                    </p>
                   </div>
                 </div>
               </div>

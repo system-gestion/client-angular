@@ -16,7 +16,7 @@
             <div class="flex justify-between text-sm">
               <span class="text-gray-600">Cliente:</span>
               <span class="font-medium text-gray-900">
-                {{ clienteSeleccionado()?.nombre || 'No seleccionado' }}
+                {{ clienteSeleccionado()?.nombres || 'No seleccionado' }}
               </span>
             </div>
             <div class="flex justify-between text-sm">
@@ -157,10 +157,10 @@
                     <div
                       class="w-8 h-8 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold text-xs shrink-0"
                     >
-                      {{ cliente.nombre.charAt(0).toUpperCase() }}
+                      {{ cliente.nombres?.charAt(0)?.toUpperCase() }}
                     </div>
                     <div class="flex-1 min-w-0">
-                      <div class="font-medium text-sm text-gray-900">{{ cliente.nombre }}</div>
+                      <div class="font-medium text-sm text-gray-900">{{ cliente.nombres }}</div>
                       <div class="text-xs text-gray-500">{{ cliente.cod_cliente }}</div>
                     </div>
                   </div>
@@ -174,11 +174,11 @@
               <div
                 class="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold text-sm shrink-0"
               >
-                {{ clienteSeleccionado()!.nombre.charAt(0).toUpperCase() }}
+                {{ clienteSeleccionado()?.nombres?.charAt(0)?.toUpperCase() }}
               </div>
               <div class="flex-1 min-w-0">
                 <div class="font-medium text-sm text-gray-800 truncate">
-                  {{ clienteSeleccionado()!.nombre }}
+                  {{ clienteSeleccionado()?.nombres }}
                 </div>
                 <div class="text-xs text-gray-600">{{ clienteSeleccionado()!.cod_cliente }}</div>
               </div>

@@ -26,7 +26,7 @@
                   [(ngModel)]="q"
                   (keyup.enter)="buscar()"
                   class="w-full pl-10 pr-12 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
-                  placeholder="Código, nombre o correo..."
+                  placeholder="Código, apellidos, nombres o correo..."
                 />
               </div>
             </div>
@@ -128,14 +128,14 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       <div class="font-medium text-gray-900">
-                        {{ cliente.nombre }}
+                        {{ cliente.apellidos }} {{ cliente.nombres }}
                       </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       <div>{{ cliente.correo || '-' }}</div>
-                      @if (cliente.telefono || cliente.celular) {
+                      @if (cliente.celular) {
                       <div class="text-xs text-gray-500">
-                        Tel: {{ cliente.telefono || cliente.celular }}
+                        Tel: {{ cliente.celular }}
                       </div>
                       }
                     </td>

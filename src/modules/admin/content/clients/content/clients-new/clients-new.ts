@@ -22,11 +22,11 @@ export class ClientsNew {
 
   // Form data
   cod_cliente = signal('');
-  nombre = signal('');
+  apellidos = signal('');
+  nombres = signal('');
   direccion = signal('');
-  telefono = signal('');
-  correo = signal('');
   celular = signal('');
+  correo = signal('');
   password = signal('');
   confirmPassword = signal('');
 
@@ -36,12 +36,12 @@ export class ClientsNew {
       this.toastService.warning('Ingrese el código del cliente');
       return;
     }
-    if (!this.nombre().trim()) {
-      this.toastService.warning('Ingrese el nombre del cliente');
+    if (!this.apellidos().trim()) {
+      this.toastService.warning('Ingrese los apellidos del cliente');
       return;
     }
-    if (this.nombre().trim().split(' ').length < 2) {
-      this.toastService.warning('El nombre debe tener al menos dos palabras (Nombre y Apellido)');
+    if (!this.nombres().trim()) {
+      this.toastService.warning('Ingrese los nombres del cliente');
       return;
     }
     if (!this.correo().trim()) {
@@ -61,11 +61,11 @@ export class ClientsNew {
 
     const cliente: ClienteCreate = {
       cod_cliente: this.cod_cliente(),
-      nombre: this.nombre(),
+      apellidos: this.apellidos(),
+      nombres: this.nombres(),
       direccion: this.direccion() || undefined,
-      telefono: this.telefono() || undefined,
       correo: this.correo(),
-      celular: this.telefono() || undefined, // Usar teléfono como celular
+      celular: this.celular() || undefined,
       password: this.password(),
     };
 
@@ -85,11 +85,11 @@ export class ClientsNew {
 
   limpiar() {
     this.cod_cliente.set('');
-    this.nombre.set('');
+    this.apellidos.set('');
+    this.nombres.set('');
     this.direccion.set('');
-    this.telefono.set('');
-    this.correo.set('');
     this.celular.set('');
+    this.correo.set('');
     this.password.set('');
     this.confirmPassword.set('');
   }

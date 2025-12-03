@@ -1,10 +1,10 @@
 export interface ClienteResponse {
   cod_cliente: string;
-  nombre: string;
   direccion?: string;
-  telefono?: string;
-  cod_usuario?: number;
+  cod_usuario: number;
   // Datos de usuario
+  apellidos?: string;
+  nombres?: string;
   correo?: string;
   celular?: string;
   estado?: number;
@@ -12,20 +12,20 @@ export interface ClienteResponse {
 
 export interface ClienteCreate {
   cod_cliente: string;
-  nombre: string;
   direccion?: string;
-  telefono?: string;
-  // Datos de usuario
+  // Datos de usuario (requeridos)
+  apellidos: string;
+  nombres: string;
   correo: string;
   celular?: string;
   password: string;
 }
 
 export interface ClienteUpdate {
-  nombre?: string;
   direccion?: string;
-  telefono?: string;
   // Datos de usuario
+  apellidos?: string;
+  nombres?: string;
   correo?: string;
   celular?: string;
   password?: string;
