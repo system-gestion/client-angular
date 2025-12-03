@@ -13,6 +13,7 @@ export const API_URL = {
     login: `${BASE_URL}/auth/login`,
     logout: (num_sesion: number) => `${BASE_URL}/auth/logout?num_sesion=${num_sesion}`,
     me: (cod_usuario: number) => `${BASE_URL}/auth/me?cod_usuario=${cod_usuario}`,
+    verifyEmail: `${BASE_URL}/auth/verify-email`,
   },
 
   // Usuarios

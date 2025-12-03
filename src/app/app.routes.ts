@@ -93,6 +93,7 @@ export const routes: Routes = [
     children: [
       { path: getPath(PATH.auth.signIn), loadComponent: () => import('@module/auth/sing-in/sing-in').then(m => m.SingIn) },
       { path: getPath(PATH.auth.signUp), loadComponent: () => import('@module/auth/sing-up/sing-up').then(m => m.SingUp) },
+      { path: getPath(PATH.auth.verifyEmail), loadComponent: () => import('@module/auth/verify-email/verify-email').then(m => m.VerifyEmail) },
       { path: '**', redirectTo: getPath(PATH.auth.signIn), pathMatch: 'full' },
     ]
   },

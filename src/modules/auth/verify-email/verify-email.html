@@ -1,0 +1,26 @@
+<div class="verify-container">
+  <div class="verify-card">
+    @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <h2>Verificando email...</h2>
+      <p>Por favor espera un momento</p>
+    </div>
+    } @else if (success()) {
+    <div class="success-state">
+      <div class="icon-success">✓</div>
+      <h2>¡Email verificado con éxito!</h2>
+      <p>Tu cuenta ha sido verificada correctamente.</p>
+      <p class="redirect-text">Serás redirigido al inicio de sesión en 3 segundos...</p>
+      <button (click)="goToLogin()" class="btn-primary">Ir al inicio de sesión</button>
+    </div>
+    } @else if (error()) {
+    <div class="error-state">
+      <div class="icon-error">✕</div>
+      <h2>Error en la verificación</h2>
+      <p class="error-message">{{ error() }}</p>
+      <button (click)="goToLogin()" class="btn-secondary">Volver al inicio de sesión</button>
+    </div>
+    }
+  </div>
+</div>

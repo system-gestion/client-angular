@@ -28,3 +28,8 @@ export interface LoginResponse {
 export interface LogoutResponse {
   message: string;
 }
+
+export interface VerifyEmailResponse {
+  message: string;
+  email_verified: boolean;
+}

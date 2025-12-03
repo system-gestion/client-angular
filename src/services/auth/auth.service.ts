@@ -7,6 +7,7 @@ import {
   LoginResponse,
   LogoutResponse,
   MeResponse,
+  VerifyEmailResponse,
 } from '@interface/auth/auth.interface';
 
 @Injectable({
@@ -56,6 +57,10 @@ export class AuthService {
     return this.http
       .get<MeResponse>(API_URL.auth.me(cod_usuario))
       .pipe(tap((usuario) => this.userSignal.set(usuario)));
+  }
+
+  verifyEmail(token: string): Observable<VerifyEmailResponse> {
+    return this.http.post<VerifyEmailResponse>(API_URL.auth.verifyEmail, { token });
   }
 
   hasNivel(nivel: number): boolean {

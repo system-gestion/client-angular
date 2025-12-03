@@ -43,6 +43,7 @@ export const PATH = {
     _path: 'auth',
     signIn: { _path: 'sign-in' },
     signUp: { _path: 'sign-up' },
+    verifyEmail: { _path: 'verify-email' },
   },
   admin: {
     _path: 'admin',
