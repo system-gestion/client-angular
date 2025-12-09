@@ -47,13 +47,6 @@ export class UsersNew {
       return;
     }
 
-    // Validar que solo se puedan crear Supervisores (1) o Vendedores (2)
-   /* if (this.nivel() !== 1 && this.nivel() !== 2) {
-      alert(this.nivel());
-      this.toastService.error('Solo se pueden crear usuarios de tipo Supervisor o Vendedor');
-      return;
-    } */
-
     this.loading.set(true);
 
     const usuario: UsuarioCreate = {

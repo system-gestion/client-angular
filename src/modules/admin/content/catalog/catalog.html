@@ -1,0 +1,145 @@
+<div class="flex-1 bg-gray-50 p-6 flex items-center justify-center">
+  <div class="max-w-7xl mx-auto w-full">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-xl font-bold text-gray-800">Catálogo de Artículos</h1>
+      <p class="text-sm text-gray-600 mt-1">Explora todos los productos disponibles</p>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Búsqueda -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Buscar Artículo</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
+              <i class="fa-solid fa-search"></i>
+            </span>
+            <input
+              type="text"
+              [ngModel]="searchTerm()"
+              (ngModelChange)="onSearchChange($event)"
+              placeholder="Buscar por nombre o código..."
+              class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
+            />
+          </div>
+        </div>
+
+        <!-- Filtro de Ofertas -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Filtrar por Oferta</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400 pointer-events-none">
+              <i class="fa-solid fa-tag"></i>
+            </span>
+            <select
+              [ngModel]="ofertaFilter()"
+              (ngModelChange)="onOfertaFilterChange($event)"
+              class="w-full pl-10 pr-8 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm appearance-none bg-white cursor-pointer"
+            >
+              <option value="all">Todos</option>
+              <option value="con-oferta">Con Oferta</option>
+              <option value="sin-oferta">Sin Oferta</option>
+            </select>
+            <span class="absolute inset-y-0 right-3 flex items-center text-gray-400 pointer-events-none">
+              <i class="fa-solid fa-chevron-down text-xs"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div class="mt-4 text-sm text-gray-600">
+        Mostrando <span class="font-semibold text-gray-800">{{ articulosFiltrados().length }}</span> de
+        <span class="font-semibold text-gray-800">{{ articulos().length }}</span> artículos
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading()) {
+      <div class="flex items-center justify-center h-64">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    }
+
+    <!-- Grid de Artículos -->
+    @else if (articulosFiltrados().length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for (articulo of articulosFiltrados(); track articulo.cod_articulo) {
+          <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+            <!-- Imagen del producto -->
+            <div class="bg-linear-to-br from-blue-50 to-indigo-100 h-48 flex items-center justify-center relative">
+              <i class="fa-solid fa-box-open text-6xl text-blue-300"></i>
+
+              <!-- Badge de oferta -->
+              @if (hasDescuento(articulo)) {
+                <div class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                  @if (articulo.tipo_descuento === 1) {
+                    -${{ articulo.valor_descuento }}
+                  } @else if (articulo.tipo_descuento === 2) {
+                    -{{ articulo.valor_descuento }}%
+                  }
+                </div>
+              }
+
+              <!-- Badge de stock -->
+              <div class="absolute bottom-3 left-3 bg-white px-3 py-1 rounded-full text-xs font-medium shadow">
+                <i class="fa-solid fa-boxes-stacked mr-1" [ngClass]="getStockClass(articulo.stock)"></i>
+                <span [ngClass]="getStockClass(articulo.stock)">{{ articulo.stock }} unid.</span>
+              </div>
+            </div>
+
+            <!-- Información del producto -->
+            <div class="p-5">
+              <!-- Código -->
+              <div class="text-xs text-gray-500 mb-2">
+                COD: {{ articulo.cod_articulo }}
+              </div>
+
+              <!-- Nombre -->
+              <h3 class="font-semibold text-gray-800 mb-3 line-clamp-2 min-h-10">
+                {{ articulo.nombre }}
+              </h3>
+
+              <!-- Precio -->
+              <div class="mb-4">
+                @if (hasDescuento(articulo)) {
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-2xl font-bold text-blue-600">
+                      ${{ calculatePrecioFinal(articulo).toFixed(2) }}
+                    </span>
+                    <span class="text-sm text-gray-400 line-through">
+                      ${{ articulo.pvp.toFixed(2) }}
+                    </span>
+                  </div>
+                } @else {
+                  <div class="text-2xl font-bold text-gray-800">
+                    ${{ articulo.pvp.toFixed(2) }}
+                  </div>
+                }
+              </div>
+
+              <!-- Estado de stock -->
+              <div class="flex items-center">
+                <span class="text-xs font-medium" [ngClass]="getStockClass(articulo.stock)">
+                  <i class="fa-solid fa-circle text-[6px] mr-1"></i>
+                  {{ getStockText(articulo.stock) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @else {
+      <div class="bg-white rounded-2xl shadow-md p-12 text-center">
+        <i class="fa-solid fa-box-open text-6xl text-gray-300 mb-4"></i>
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">No se encontraron artículos</h3>
+        <p class="text-sm text-gray-600">Intenta ajustar los filtros de búsqueda</p>
+      </div>
+    }
+  </div>
+</div>

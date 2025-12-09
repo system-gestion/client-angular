@@ -86,6 +86,9 @@ export const routes: Routes = [
         ],
       },
 
+      // Catalog routes
+      { path: getPath(PATH.admin.catalog), loadComponent: () => import('@module/admin/content/catalog/catalog').then(m => m.Catalog) },
+
       { path: '**', redirectTo: getPath(PATH.admin.profile), pathMatch: 'full' },
     ]
   },

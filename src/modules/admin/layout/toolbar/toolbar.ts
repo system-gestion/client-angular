@@ -153,6 +153,11 @@ export class Toolbar implements OnInit, OnDestroy {
       ],
     },
     {
+      label: 'CATÁLOGO',
+      path: buildPath(PATH.admin.catalog),
+      action: () => this.navigate(buildPath(PATH.admin.catalog)),
+    },
+    {
       label: 'MIS PEDIDOS',
       path: buildPath(PATH.admin.myorders),
       items: [

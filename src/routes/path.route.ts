@@ -105,6 +105,10 @@ export const PATH = {
       remove: { _path: 'remove' },
       active: { _path: 'active' },
     },
+
+    catalog: {
+      _path: 'catalog',
+    }
   },
 } as const;
 
@@ -168,6 +172,9 @@ export const ROUTE_CONFIG = {
     [buildPath(PATH.admin.offers.new)]: [2],
     [buildPath(PATH.admin.offers.remove)]: [2],
     [buildPath(PATH.admin.offers.active)]: [2, 3],
+
+    // Catalog - Clientes
+    [buildPath(PATH.admin.catalog)]: [3],
   } as Record<string, number[]>,
 };
 
