@@ -178,6 +178,23 @@
                   >
                 </div>
               </div>
+
+              <!-- Botón de Atender Pedido -->
+              <div class="mt-6">
+                <button
+                  (click)="atenderPedido()"
+                  [disabled]="loadingAtender()"
+                  class="w-full py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-xl font-semibold shadow-sm transition-colors flex items-center justify-center gap-2"
+                >
+                  @if (loadingAtender()) {
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Procesando...</span>
+                  } @else {
+                    <i class="fa-solid fa-check-circle"></i>
+                    <span>Atender Pedido</span>
+                  }
+                </button>
+              </div>
             </div>
           </div>
           } @else {

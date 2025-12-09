@@ -20,6 +20,7 @@ export interface PedidoCreate {
   fecha?: string;
   importe: number;
   cod_cliente: string;
+  cod_vendedor?: number;
   estado?: number; // 1=pending, 2=completed, 3=cancelled (default: 1)
   detalles?: DetallePedidoCreate[];
 }
@@ -29,8 +30,10 @@ export interface PedidoResponse {
   fecha: string;
   importe: number;
   cod_cliente: string;
+  cod_vendedor: number;
   estado: number; // 1=pending, 2=completed, 3=cancelled
   nombre_cliente?: string;
+  nombre_vendedor?: string;
   detalles: DetallePedidoResponse[];
 }
 
@@ -38,6 +41,7 @@ export interface PedidoUpdate {
   fecha?: string;
   importe?: number;
   cod_cliente?: string;
+  cod_vendedor?: number;
   estado?: number; // 1=pending, 2=completed, 3=cancelled
 }
 

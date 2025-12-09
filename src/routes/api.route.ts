@@ -56,15 +56,18 @@ export const API_URL = {
 
   // Pedidos
   pedidos: {
-    list: (params?: { skip?: number; limit?: number }) => {
+    list: (params?: { skip?: number; limit?: number; cod_vendedor?: number }) => {
       const query = new URLSearchParams();
       if (params?.skip !== undefined) query.append('skip', params.skip.toString());
       if (params?.limit !== undefined) query.append('limit', params.limit.toString());
+      if (params?.cod_vendedor !== undefined)
+        query.append('cod_vendedor', params.cod_vendedor.toString());
       return `${BASE_URL}/pedidos/?${query.toString()}`;
     },
     create: `${BASE_URL}/pedidos/`,
     search: (params?: {
       cod_cliente?: string;
+      cod_vendedor?: number;
       fecha_inicio?: string;
       fecha_fin?: string;
       importe_min?: number;
@@ -72,6 +75,8 @@ export const API_URL = {
     }) => {
       const query = new URLSearchParams();
       if (params?.cod_cliente) query.append('cod_cliente', params.cod_cliente);
+      if (params?.cod_vendedor !== undefined)
+        query.append('cod_vendedor', params.cod_vendedor.toString());
       if (params?.fecha_inicio) query.append('fecha_inicio', params.fecha_inicio);
       if (params?.fecha_fin) query.append('fecha_fin', params.fecha_fin);
       if (params?.importe_min !== undefined)
@@ -80,11 +85,33 @@ export const API_URL = {
         query.append('importe_max', params.importe_max.toString());
       return `${BASE_URL}/pedidos/search?${query.toString()}`;
     },
-    byDate: (fecha: string) => `${BASE_URL}/pedidos/by-date?fecha=${fecha}`,
-    byNumber: (num_pedido: number) => `${BASE_URL}/pedidos/by-number/${num_pedido}`,
-    pending: `${BASE_URL}/pedidos/pending`,
-    completed: `${BASE_URL}/pedidos/completed`,
-    cancelled: `${BASE_URL}/pedidos/cancelled`,
+    byDate: (fecha: string, cod_vendedor?: number) => {
+      const query = new URLSearchParams();
+      query.append('fecha', fecha);
+      if (cod_vendedor !== undefined) query.append('cod_vendedor', cod_vendedor.toString());
+      return `${BASE_URL}/pedidos/by-date?${query.toString()}`;
+    },
+    byNumber: (num_pedido: number, cod_vendedor?: number) => {
+      const query = new URLSearchParams();
+      if (cod_vendedor !== undefined) query.append('cod_vendedor', cod_vendedor.toString());
+      const queryStr = query.toString();
+      return `${BASE_URL}/pedidos/by-number/${num_pedido}${queryStr ? '?' + queryStr : ''}`;
+    },
+    pending: (cod_vendedor?: number) => {
+      const query = new URLSearchParams();
+      if (cod_vendedor !== undefined) query.append('cod_vendedor', cod_vendedor.toString());
+      return `${BASE_URL}/pedidos/pending?${query.toString()}`;
+    },
+    completed: (cod_vendedor?: number) => {
+      const query = new URLSearchParams();
+      if (cod_vendedor !== undefined) query.append('cod_vendedor', cod_vendedor.toString());
+      return `${BASE_URL}/pedidos/completed?${query.toString()}`;
+    },
+    cancelled: (cod_vendedor?: number) => {
+      const query = new URLSearchParams();
+      if (cod_vendedor !== undefined) query.append('cod_vendedor', cod_vendedor.toString());
+      return `${BASE_URL}/pedidos/cancelled?${query.toString()}`;
+    },
     byCliente: (cod_cliente: string) => `${BASE_URL}/pedidos/cliente/${cod_cliente}`,
     estadisticas: (params?: { fecha_inicio?: string; fecha_fin?: string }) => {
       const query = new URLSearchParams();

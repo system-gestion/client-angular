@@ -24,6 +24,9 @@ export class OrdersPending implements OnInit {
   // Estado de carga de la lista inicial
   loadingList = signal(true);
 
+  // Estado de carga al atender un pedido
+  loadingAtender = signal(false);
+
   // Pedido actualmente seleccionado en el panel lateral
   pedidoSeleccionado = signal<PedidoResponse | null>(null);
 
@@ -77,5 +80,26 @@ export class OrdersPending implements OnInit {
     } else {
       this.pedidoSeleccionado.set(pedido);
     }
+  }
+
+  atenderPedido() {
+    const pedido = this.pedidoSeleccionado();
+    if (!pedido) return;
+
+    this.loadingAtender.set(true);
+
+    this.pedidosService.update(pedido.num_pedido, { estado: 2 }).subscribe({
+      next: () => {
+        this.loadingAtender.set(false);
+        this.toastService.success(`Pedido #${pedido.num_pedido} atendido correctamente`);
+        this.pedidoSeleccionado.set(null);
+        this.cargarPedidos();
+      },
+      error: (err) => {
+        console.error(err);
+        this.loadingAtender.set(false);
+        this.toastService.error('Error al atender el pedido');
+      }
+    });
   }
 }
