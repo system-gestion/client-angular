@@ -20,6 +20,7 @@
             <input
               type="text"
               [(ngModel)]="searchId"
+              name="searchId"
               (keyup.enter)="buscar()"
               class="w-full pl-10 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm placeholder:text-gray-500"
               placeholder="Ej. CLI001"
@@ -114,6 +115,7 @@
                 <input
                   type="text"
                   [(ngModel)]="nombres"
+                  name="nombres"
                   placeholder="Ej. Juan Carlos"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />
@@ -127,6 +129,7 @@
                 <input
                   type="text"
                   [(ngModel)]="apellidos"
+                  name="apellidos"
                   placeholder="Ej. Pérez García"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />
@@ -143,6 +146,7 @@
                 <input
                   type="email"
                   [(ngModel)]="correo"
+                  name="correo"
                   placeholder="ejemplo@correo.com"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />
@@ -157,6 +161,7 @@
                 <input
                   type="text"
                   [(ngModel)]="direccion"
+                  name="direccion"
                   placeholder="Ej. Av. Principal 123, Lima"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />
@@ -168,6 +173,7 @@
                 <input
                   type="text"
                   [(ngModel)]="celular"
+                  name="celular"
                   placeholder="Ej. 999-888-777"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />
@@ -205,6 +211,7 @@
                 <input
                   type="password"
                   [(ngModel)]="password"
+                  name="password"
                   placeholder="Mínimo 6 caracteres"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />
@@ -218,6 +225,7 @@
                 <input
                   type="password"
                   [(ngModel)]="confirmPassword"
+                  name="confirmPassword"
                   placeholder="Repite la contraseña"
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all text-sm text-gray-800"
                 />

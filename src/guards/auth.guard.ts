@@ -16,9 +16,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   authService.restoreSession();
 
   if (!authService.isAuthenticated()) {
-    router.navigate([buildPath(PATH.auth.signIn)], {
-      queryParams: { returnUrl: state.url }
-    });
+    router.navigate([buildPath(PATH.auth.signIn)]);
     return false;
   }
 

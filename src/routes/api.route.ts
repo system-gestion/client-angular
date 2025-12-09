@@ -1,7 +1,8 @@
-const BASE_URL_LOCAL = 'http://localhost:8000';
-const BASE_URL_GLOBAL = 'http://34.63.60.11:8000';
+const PUERTO = 8000;
+const IP = 'localhost';
+// const IP = '34.63.60.11';
 
-const BASE_URL = BASE_URL_GLOBAL;
+const BASE_URL = `http://${IP}:${PUERTO}`;
 
 export const API_URL = {
   // Root
@@ -204,8 +205,8 @@ export const API_URL = {
   // WebSockets
   ws: {
     usersEditing: (supervisorName: string) =>
-      `ws://34.63.60.11:8000/ws/users/editing?supervisor_name=${encodeURIComponent(supervisorName)}`,
+      `ws://${IP}:${PUERTO}/ws/users/editing?supervisor_name=${encodeURIComponent(supervisorName)}`,
     clientesEditing: (vendedorName: string) =>
-      `ws://34.63.60.11:8000/ws/clientes/editing?vendedor_name=${encodeURIComponent(vendedorName)}`,
+      `ws://${IP}:${PUERTO}/ws/clientes/editing?vendedor_name=${encodeURIComponent(vendedorName)}`,
   },
 };
